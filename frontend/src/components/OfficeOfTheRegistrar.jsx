@@ -93,8 +93,37 @@ const AdmissionFormProcess = () => {
   return (
     <Box sx={{ height: 'calc(100vh - 120px)', overflowY: 'auto', paddingRight: 1, backgroundColor: 'transparent' }}>
       <Container>
+              <h1 style={{ fontSize: "40px", fontWeight: "bold", textAlign: "Left", color: "maroon", marginTop: "25px" }}> OFFICE OF THE REGISTRAR</h1>
+              <hr style={{ border: "1px solid #ccc", width: "45%" }} />
+              <button
+                onClick={printDiv}
+                style={{
+                  marginBottom: "1rem",
+                  padding: "10px 20px",
+                  border: "2px solid black",
+                  backgroundColor: "#f0f0f0",
+                  color: "black",
+                  borderRadius: "5px",
+                  marginTop: "20px",
+                  cursor: "pointer",
+                  fontSize: "16px",
+                  fontWeight: "bold",
+                  transition: "background-color 0.3s, transform 0.2s",
+                }}
+                onMouseEnter={(e) => (e.target.style.backgroundColor = "#d3d3d3")}
+                onMouseLeave={(e) => (e.target.style.backgroundColor = "#f0f0f0")}
+                onMouseDown={(e) => (e.target.style.transform = "scale(0.95)")}
+                onMouseUp={(e) => (e.target.style.transform = "scale(1)")}
+              >
+                Print Table
+              </button>
+            </Container>
+      <Container>
         <div ref={divToPrintRef}>
           <br />
+         
+
+
           <Container>
             <div style={{
               width: "8in", // matches table width assuming 8in for 40 columns
@@ -132,20 +161,20 @@ const AdmissionFormProcess = () => {
                   flexGrow: 1,
                   textAlign: "center",
 
-                  fontFamily: "times new Roman",
+                  fontFamily: "Arial",
                   lineHeight: 1.4,
                   paddingTop: 0,
                   paddingBottom: 0
                 }}>
-                  <div style={{ marginLeft: "-155px", fontFamily: "times new Roman", fontsize: "12px", }}>Republic of the Philippines</div>
-                  <div style={{ marginLeft: "-155px", fontFamily: "times new Roman", fontsize: "20px", }}><b>EULOGIO "AMANG" RODRIGUEZ </b></div>
-                  <div style={{ marginLeft: "-155px", fontFamily: "times new Roman", fontsize: "20px", }}><b>INSTITUTE OF SCIENCE AND TECHNOLOGY</b></div>
-                  <div style={{ marginLeft: "-155px", fontSize: "12px" }}>Nagtahan, Sampaloc, Manila 1008</div>
+                  <div style={{ marginLeft: "-155px", fontFamily: "Arial", fontsize: "12px", }}>Republic of the Philippines</div>
+                  <div style={{ marginLeft: "-155px", fontFamily: "Arial", fontsize: "12px", }}><b>EULOGIO "AMANG" RODRIGUEZ </b></div>
+                  <div style={{ marginLeft: "-155px", fontFamily: "times new Roman", fontsize: "12px", }}><b>INSTITUTE OF SCIENCE AND TECHNOLOGY</b></div>
+                  <div style={{ marginLeft: "-155px", fontFamily: "Arial", fontSize: "12px" }}>Nagtahan, Sampaloc, Manila 1008</div>
                   <br />
 
                   <div style={{
                     fontSize: "18px",
-                    fontFamily: "Times new roman",
+                    fontFamily: "Arial",
                     fontWeight: "bold",
                     marginBottom: "5px",
                     marginTop: "0",
@@ -2118,7 +2147,7 @@ const AdmissionFormProcess = () => {
 
                   }}
                 >
-                
+
 
                 </td>
                 <td
@@ -2193,7 +2222,7 @@ const AdmissionFormProcess = () => {
 
                   }}
                 >
-          
+
                 </td>
                 <td
                   colSpan={2}
@@ -2279,7 +2308,7 @@ const AdmissionFormProcess = () => {
 
                   }}
                 >
-               
+
 
                 </td>
                 <td
@@ -2954,28 +2983,7 @@ const AdmissionFormProcess = () => {
 
         </div>
       </Container>
-      <button
-        onClick={printDiv}
-        style={{
-          marginBottom: "1rem",
-          padding: "10px 20px",
-          border: "2px solid black",
-          backgroundColor: "#f0f0f0",
-          color: "black",
-          borderRadius: "5px",
-          marginTop: "20px",
-          cursor: "pointer",
-          fontSize: "16px",
-          fontWeight: "bold",
-          transition: "background-color 0.3s, transform 0.2s",
-        }}
-        onMouseEnter={(e) => (e.target.style.backgroundColor = "#d3d3d3")}
-        onMouseLeave={(e) => (e.target.style.backgroundColor = "#f0f0f0")}
-        onMouseDown={(e) => (e.target.style.transform = "scale(0.95)")}
-        onMouseUp={(e) => (e.target.style.transform = "scale(1)")}
-      >
-        Print Table
-      </button>
+      
     </Box>
   );
 };
