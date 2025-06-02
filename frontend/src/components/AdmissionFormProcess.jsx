@@ -62,13 +62,8 @@ const AdmissionFormProcess = () => {
   }
 
     .student-table {
-    margin-top: -70px !important;
+    margin-top: -40px !important;
   }
-
-    .student-table1 {
-    margin-top: -120px !important;
-  }
-
 
   svg.MuiSvgIcon-root {
   margin-top: -53px;
@@ -96,16 +91,47 @@ const AdmissionFormProcess = () => {
   return (
     <Box sx={{ height: 'calc(100vh - 120px)', overflowY: 'auto', paddingRight: 1, backgroundColor: 'transparent' }}>
       <Container>
+        <h1 style={{ fontSize: "40px", fontWeight: "bold", textAlign: "Left", color: "maroon", marginTop: "25px" }}> ADMISSION FORM (PROCESS)</h1>
+        <hr style={{ border: "1px solid #ccc", width: "50%" }} />
+        <button
+          onClick={printDiv}
+          style={{
+            marginBottom: "1rem",
+            padding: "10px 20px",
+            border: "2px solid black",
+            backgroundColor: "#f0f0f0",
+            color: "black",
+            borderRadius: "5px",
+            marginTop: "20px",
+            cursor: "pointer",
+            fontSize: "16px",
+            fontWeight: "bold",
+            transition: "background-color 0.3s, transform 0.2s",
+          }}
+          onMouseEnter={(e) => (e.target.style.backgroundColor = "#d3d3d3")}
+          onMouseLeave={(e) => (e.target.style.backgroundColor = "#f0f0f0")}
+          onMouseDown={(e) => (e.target.style.transform = "scale(0.95)")}
+          onMouseUp={(e) => (e.target.style.transform = "scale(1)")}
+        >
+          Print Table
+        </button>
+      </Container>
+
+
+      <Container>
+
+
+
         <div ref={divToPrintRef}>
 
           <Container>
+
             <div style={{
               width: "8in", // matches table width assuming 8in for 40 columns
               maxWidth: "100%",
               margin: "0 auto", // center the content
               fontFamily: "Times New Roman",
               boxSizing: "border-box",
-
               padding: "10px 0", // reduced horizontal padding
 
             }}>
@@ -136,13 +162,13 @@ const AdmissionFormProcess = () => {
                   paddingTop: 0,
                   paddingBottom: 0
                 }}>
-                  <div style={{ marginLeft: "-155px", letterSpacing: '1px' }}>Republic of the Philippines</div>
-                  <div style={{ marginLeft: "-155px", letterSpacing: '1px' }}><b>Eulogio "Amang" Rodriguez</b></div>
-                  <div style={{ marginLeft: "-155px", letterSpacing: '1px' }}><b>Institute of Science and Technology</b></div>
-                  <div style={{ marginLeft: "-155px", letterSpacing: '1px' }}>Nagtahan, Sampaloc, Manila 1008</div>
-                  <div style={{ marginLeft: "-155px", letterSpacing: '1px' }}>OFFICE OF THE ADMISSION SERVICES</div>
-
+                  <div style={{ marginLeft: "-155px", fontFamily: "Arial", fontsize: "12px", }}>Republic of the Philippines</div>
+                  <div style={{ marginLeft: "-155px", fontFamily: "Arial", letterSpacing: '2px' }}><b>EULOGIO "AMANG" RODRIGUEZ </b></div>
+                  <div style={{ marginLeft: "-155px", fontFamily: "Arial", letterSpacing: '2px' }}><b>INSTITUTE OF SCIENCE AND TECHNOLOGY</b></div>
+                  <div style={{ marginLeft: "-155px", fontFamily: "Arial", fontSize: "12px" }}>Nagtahan, Sampaloc, Manila 1008</div>
+                  <div style={{ marginLeft: "-155px", fontFamily: "Arial", letterSpacing: '1px', }}><b>OFFICE OF THE ADMISSION SERVICES</b></div>
                   <br />
+
                   <div style={{
                     fontSize: "21px",
                     fontFamily: "Arial",
@@ -158,8 +184,6 @@ const AdmissionFormProcess = () => {
               </div>
             </div>
           </Container>
-
-
 
           <table
             className="student-table"
@@ -192,14 +216,14 @@ const AdmissionFormProcess = () => {
                     marginTop: 0,
                   }}
                 >
-                  <span style={{ fontWeight: "bold", marginRight: "30px" }}>
+                  <span style={{ fontWeight: "bold", marginRight: "10px", marginLeft: "-5px" }}>
                     Name of Student:
                   </span>{" "}
                   <span
                     style={{
                       display: "inline-block",
                       borderBottom: "1px solid black",
-                      width: "75%",
+                      width: "82%",
                       paddingLeft: "10px",
                     }}
                   >
@@ -249,7 +273,7 @@ const AdmissionFormProcess = () => {
                   <span style={{
                     display: "inline-block",
                     borderBottom: "1px solid black",
-                    width: "calc(105% - 180px)",
+                    width: "calc(104% - 180px)",
                     marginLeft: "10px"
                   }} />
                 </td>
@@ -481,13 +505,13 @@ const AdmissionFormProcess = () => {
                   />
 
                 </td>
-               <td colSpan={5} style={{ border: "1px solid black", textAlign: "center", padding: "8px", fontSize: "12px" }}>
+                <td colSpan={5} style={{ border: "1px solid black", textAlign: "center", padding: "8px", fontSize: "12px" }}>
 
                 </td>
-                   <td colSpan={6} style={{ border: "1px solid black", textAlign: "center", padding: "8px", fontSize: "12px" }}>
+                <td colSpan={6} style={{ border: "1px solid black", textAlign: "center", padding: "8px", fontSize: "12px" }}>
 
                 </td>
-                   <td colSpan={5} style={{ border: "1px solid black", textAlign: "center", padding: "8px", fontSize: "12px" }}>
+                <td colSpan={5} style={{ border: "1px solid black", textAlign: "center", padding: "8px", fontSize: "12px" }}>
 
                 </td>
                 <td
@@ -522,7 +546,7 @@ const AdmissionFormProcess = () => {
 
               <tr>
                 <td colSpan={10} style={{ border: "1px solid black", textAlign: "left", padding: "8px", fontSize: "12px", }}>
-                  Medical and Dental Services<br /> Office<br />   <b>Step 3:</b> Medical Examination
+                  <b> Medical and Dental Service Office</b><br />   <b>Step 3:</b> Medical Examination
                 </td>
                 <td
                   colSpan={5}
@@ -686,11 +710,11 @@ const AdmissionFormProcess = () => {
                   paddingTop: 0,
                   paddingBottom: 0
                 }}>
-                  <div style={{ marginLeft: "-155px", letterSpacing: '1px' }}>Republic of the Philippines</div>
-                  <div style={{ marginLeft: "-155px", letterSpacing: '1px' }}><b>Eulogio "Amang" Rodriguez</b></div>
-                  <div style={{ marginLeft: "-155px", letterSpacing: '1px' }}><b>Institute of Science and Technology</b></div>
-                  <div style={{ marginLeft: "-155px", letterSpacing: '1px' }}>Nagtahan, Sampaloc, Manila 1008</div>
-                  <div style={{ marginLeft: "-155px", letterSpacing: '1px' }}>OFFICE OF THE ADMISSION SERVICES</div>
+                  <div style={{ marginLeft: "-155px", fontFamily: "Arial", fontsize: "12px", }}>Republic of the Philippines</div>
+                  <div style={{ marginLeft: "-155px", fontFamily: "Arial", letterSpacing: '2px' }}><b>EULOGIO "AMANG" RODRIGUEZ </b></div>
+                  <div style={{ marginLeft: "-155px", fontFamily: "Arial", letterSpacing: '2px' }}><b>INSTITUTE OF SCIENCE AND TECHNOLOGY</b></div>
+                  <div style={{ marginLeft: "-155px", fontFamily: "Arial", fontSize: "12px" }}>Nagtahan, Sampaloc, Manila 1008</div>
+                  <div style={{ marginLeft: "-155px", fontFamily: "Arial", letterSpacing: '1px', }}><b>OFFICE OF THE ADMISSION SERVICES</b></div>
 
                   <br />
                   <div style={{
@@ -742,14 +766,14 @@ const AdmissionFormProcess = () => {
                     marginTop: 0,
                   }}
                 >
-                  <span style={{ fontWeight: "bold", marginRight: "30px" }}>
+                  <span style={{ fontWeight: "bold", marginRight: "10px", marginLeft: "-5px" }}>
                     Name of Student:
                   </span>{" "}
                   <span
                     style={{
                       display: "inline-block",
                       borderBottom: "1px solid black",
-                      width: "75%",
+                      width: "82%",
                       paddingLeft: "10px",
                     }}
                   >
@@ -757,7 +781,6 @@ const AdmissionFormProcess = () => {
                   </span>
                 </td>
               </tr>
-
 
               <tr>
                 <td colSpan={40} style={{ fontFamily: "Times New Roman", fontSize: "14px", paddingTop: "2px" }}>
@@ -771,54 +794,7 @@ const AdmissionFormProcess = () => {
                   </div>
                 </td>
               </tr>
-              <br />
-              <tr>
-                <tr>
-                  <td colSpan="40" style={{ height: "20px" }}></td>
-                </tr>
 
-                <tr>
-                  <td colSpan="40" style={{ height: "20px" }}></td>
-                </tr>
-                <td
-                  colSpan={40}
-                  style={{
-                    fontFamily: "Times New Roman",
-                    fontSize: "16px",
-                    paddingTop: "5px",  // you can reduce this if needed
-                    marginTop: 0,
-                  }}
-                >
-                  <span style={{ fontWeight: "bold", marginRight: "30px" }}>
-                    Name of Student:
-                  </span>{" "}
-                  <span
-                    style={{
-                      display: "inline-block",
-                      borderBottom: "1px solid black",
-                      width: "75%",
-                      paddingLeft: "10px",
-                    }}
-                  >
-                    {/* Full name goes here */}
-                  </span>
-                </td>
-              </tr>
-
-
-              <tr>
-                <td colSpan={40} style={{ fontFamily: "Times New Roman", fontSize: "14px", paddingTop: "2px" }}>
-                  <div style={{ display: "flex", justifyContent: "space-between", width: "80%", marginLeft: "120px" }}>
-
-                    <span>Last Name</span>
-                    <span>Given Name</span>
-                    <span>Middle Name</span>
-                    <span>Middle Initial</span>
-
-                  </div>
-                </td>
-              </tr>
-              <br />
               <tr style={{ fontFamily: "Times New Roman", fontSize: "15px" }}>
                 <td colSpan={20}>
                   <label><b>Email:</b></label>
@@ -846,7 +822,7 @@ const AdmissionFormProcess = () => {
                   <span style={{
                     display: "inline-block",
                     borderBottom: "1px solid black",
-                    width: "calc(105% - 180px)",
+                    width: "calc(104% - 180px)",
                     marginLeft: "10px"
                   }} />
                 </td>
@@ -1080,16 +1056,16 @@ const AdmissionFormProcess = () => {
                 <td colSpan={5} style={{ fontSize: "12px", fontFamily: "Arial", border: "1px solid black", padding: "8px", textAlign: "left" }}>
 
                 </td>
-                  <td colSpan={6} style={{ fontSize: "12px", fontFamily: "Arial", border: "1px solid black", padding: "8px", textAlign: "left" }}>
+                <td colSpan={6} style={{ fontSize: "12px", fontFamily: "Arial", border: "1px solid black", padding: "8px", textAlign: "left" }}>
 
                 </td>
-                  <td colSpan={5} style={{ fontSize: "12px", fontFamily: "Arial", border: "1px solid black", padding: "8px", textAlign: "left" }}>
+                <td colSpan={5} style={{ fontSize: "12px", fontFamily: "Arial", border: "1px solid black", padding: "8px", textAlign: "left" }}>
 
                 </td>
                 <td
                   colSpan={5}
                   style={{
-                   
+
                     textAlign: "center",
                     verticalAlign: "middle",
                   }}
@@ -1118,7 +1094,7 @@ const AdmissionFormProcess = () => {
 
               <tr>
                 <td colSpan={10} style={{ border: "1px solid black", textAlign: "left", padding: "8px", fontSize: "12px", }}>
-                  Medical and Dental Services<br /> Office<br />   <b>Step 3:</b> Medical Examination
+                  <b> Medical and Dental Service Office</b><br />   <b>Step 3:</b> Medical Examination
                 </td>
                 <td
                   colSpan={5}
@@ -1237,28 +1213,7 @@ const AdmissionFormProcess = () => {
 
         </div>
       </Container>
-      <button
-        onClick={printDiv}
-        style={{
-          marginBottom: "1rem",
-          padding: "10px 20px",
-          border: "2px solid black",
-          backgroundColor: "#f0f0f0",
-          color: "black",
-          borderRadius: "5px",
-          marginTop: "20px",
-          cursor: "pointer",
-          fontSize: "16px",
-          fontWeight: "bold",
-          transition: "background-color 0.3s, transform 0.2s",
-        }}
-        onMouseEnter={(e) => (e.target.style.backgroundColor = "#d3d3d3")}
-        onMouseLeave={(e) => (e.target.style.backgroundColor = "#f0f0f0")}
-        onMouseDown={(e) => (e.target.style.transform = "scale(0.95)")}
-        onMouseUp={(e) => (e.target.style.transform = "scale(1)")}
-      >
-        Print Table
-      </button>
+
     </Box>
   );
 };
