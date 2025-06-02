@@ -21,9 +21,6 @@ const Dashboard3 = () => {
   });
 
 
-  const [message, setMessage] = useState("");
-
-
   // dot not alter
   useEffect(() => {
     const storedUser = localStorage.getItem("email");
@@ -57,12 +54,13 @@ const Dashboard3 = () => {
   };
 
   const steps = [
-    { label: "Personal Information", icon: <PersonIcon />, path: "/dashboard1" },
-    { label: "Family Background", icon: <FamilyRestroomIcon />, path: "/dashboard2" },
-    { label: "Educational Attainment", icon: <SchoolIcon />, path: "/dashboard3" },
-    { label: "Health Medical Records", icon: <HealthAndSafetyIcon />, path: "/dashboard4" },
-    { label: "Other Information", icon: <InfoIcon />, path: "/dashboard5" },
+    { label: "Personal Information", icon: <PersonIcon />, path: "/dashboard1", onChange: () => handleChange({ label: "Personal Information", path: "/dashboard1" }) },
+    { label: "Family Background", icon: <FamilyRestroomIcon />, path: "/dashboard2", onChange: () => handleChange({ label: "Family Background", path: "/dashboard2" }) },
+    { label: "Educational Attainment", icon: <SchoolIcon />, path: "/dashboard3", onChange: () => handleChange({ label: "Educational Attainment", path: "/dashboard3" }) },
+    { label: "Health Medical Records", icon: <HealthAndSafetyIcon />, path: "/dashboard4", onChange: () => handleChange({ label: "Health Medical Records", path: "/dashboard4" }) },
+    { label: "Other Information", icon: <InfoIcon />, path: "/dashboard5", onChange: () => handleChange({ label: "Other Information", path: "/dashboard5" }) },
   ];
+
 
   const [activeStep, setActiveStep] = useState(2);
   const [clickedSteps, setClickedSteps] = useState(Array(steps.length).fill(false));
@@ -81,6 +79,16 @@ const Dashboard3 = () => {
       setMessage("Failed to update information.");
     }
   };
+
+  const handleBlur = async () => {
+    try {
+      await axios.put(`http://localhost:5000/api/person/${userID}`, person);
+      console.log("Auto-saved");
+    } catch (err) {
+      console.error("Auto-save failed", err);
+    }
+  };
+
 
   const handleLogout = () => {
     localStorage.clear();
@@ -264,6 +272,7 @@ const Dashboard3 = () => {
                   name="schoolLevel"
                   value={person.schoolLevel}
                   onChange={handleChange}
+                  onBlur={handleBlur}
                 >
                   <MenuItem value="High School/Junior High School">High School/Junior High School</MenuItem>
                   <MenuItem value="Senior High School">Senior High School</MenuItem>
@@ -285,6 +294,7 @@ const Dashboard3 = () => {
                   name="schoolLastAttended"
                   value={person.schoolLastAttended}
                   onChange={handleChange}
+                  onBlur={handleBlur}
                 />
               </Box>
 
@@ -298,6 +308,7 @@ const Dashboard3 = () => {
                   name="schoolAddress"
                   value={person.schoolAddress}
                   onChange={handleChange}
+                  onBlur={handleBlur}
                 />
               </Box>
 
@@ -311,6 +322,7 @@ const Dashboard3 = () => {
                   name="courseProgram"
                   value={person.courseProgram}
                   onChange={handleChange}
+                  onBlur={handleBlur}
                 />
               </Box>
             </Box>
@@ -332,6 +344,7 @@ const Dashboard3 = () => {
                   name="honor"
                   value={person.honor}
                   onChange={handleChange}
+                  onBlur={handleBlur}
                 />
               </Box>
 
@@ -345,6 +358,7 @@ const Dashboard3 = () => {
                   name="generalAverage"
                   value={person.generalAverage}
                   onChange={handleChange}
+                  onBlur={handleBlur}
                 />
               </Box>
 
@@ -358,6 +372,7 @@ const Dashboard3 = () => {
                   name="yearGraduated"
                   value={person.yearGraduated}
                   onChange={handleChange}
+                  onBlur={handleBlur}
                 />
               </Box>
             </Box>
@@ -374,6 +389,7 @@ const Dashboard3 = () => {
                 value={person.strand || ""}
                 label="Strand"
                 onChange={handleChange}
+                onBlur={handleBlur}
               >
                 <MenuItem value="Accountancy, Business and Management (ABM)">
                   Accountancy, Business and Management (ABM)
@@ -456,8 +472,6 @@ const Dashboard3 = () => {
             </Box>
 
 
-
-            {message && <p className="mt-4 text-center text-green-600">{message}</p>}
 
           </Container>
         </form>
