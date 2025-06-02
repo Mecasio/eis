@@ -3173,7 +3173,7 @@ app.get("/student-data/:studentNumber", async (req, res) => {
   }
 });
 
-// CODE NI CED
+// CODE NI CED AT NI MARK
 
 // GET person details by person_id
 app.get("/api/person/:id", async (req, res) => {
@@ -3193,6 +3193,37 @@ app.get("/api/person/:id", async (req, res) => {
   }
 });
 
+// POST: Upload and replace profile picture
+app.post("/api/person/:id/upload-profile", upload.single("profile_img"), async (req, res) => {
+  const { id } = req.params;
+  const filePath = req.file ? req.file.filename : null;
+
+  if (!filePath) return res.status(400).json({ error: "No file uploaded" });
+
+  try {
+    // 1. Get current profile_picture filename
+    const [rows] = await db.query("SELECT profile_img FROM person_table WHERE person_id = ?", [id]);
+    const currentProfile = rows[0]?.profile_img;
+
+    // 2. Delete old file if exists
+    if (currentProfile) {
+      const oldFilePath = path.join(__dirname, "uploads", currentProfile);
+      if (fs.existsSync(oldFilePath)) {
+        fs.unlinkSync(oldFilePath); // Delete old image
+      }
+    }
+
+    // 3. Update new image filename to DB
+    await db.query("UPDATE person_table SET profile_img = ? WHERE person_id = ?", [filePath, id]);
+
+    res.json({ message: "Profile image updated", profile_img: filePath });
+  } catch (err) {
+    console.error("Upload error:", err);
+    res.status(500).json({ error: "Database error during upload" });
+  }
+});
+
+// Program choices 1-3
 app.get("/api/applied_program", async (req, res) => {
   try {
     const [rows] = await db3.execute(`
@@ -3217,317 +3248,77 @@ app.get("/api/applied_program", async (req, res) => {
 // PUT update person details by person_id
 app.put("/api/person/:id", async (req, res) => {
   const { id } = req.params;
-
-  // Destructure all the fields from req.body
   const {
-    profile_picture,
-    campus,
-    academicProgram,
-    classifiedAs,
-    program,
-    program2,
-    program3,
-    yearLevel,
-    last_name,
-    first_name,
-    middle_name,
-    extension,
-    nickname,
-    height,
-    weight,
-    lrnNumber,
-    gender,
-    pwdType,
-    pwdId,
-    birthOfDate,
-    age,
-    birthPlace,
-    languageDialectSpoken,
-    citizenship,
-    religion,
-    civilStatus,
-    tribeEthnicGroup,
-    otherEthnicGroup,
-    cellphoneNumber,
-    emailAddress,
-    telephoneNumber,
-    facebookAccount,
-    presentStreet,
-    presentBarangay,
-    presentZipCode,
-    presentRegion,
-    presentProvince,
-    presentMunicipality,
-    presentDswdHouseholdNumber,
-    permanentStreet,
-    permanentBarangay,
-    permanentZipCode,
-    permanentRegion,
-    permanentProvince,
-    permanentMunicipality,
-    permanentDswdHouseholdNumber,
-    solo_parent,
-    father_deceased,
-    father_family_name,
-    father_given_name,
-    father_middle_name,
-    father_ext,
-    father_nickname,
-    father_education_level,
-    father_last_school,
-    father_course,
-    father_year_graduated,
-    father_school_address,
-    father_contact,
-    father_occupation,
-    father_employer,
-    father_income,
-    father_email,
-    mother_deceased,
-    mother_family_name,
-    mother_given_name,
-    mother_middle_name,
-    mother_nickname,
-    mother_education_level,
-    mother_last_school,
-    mother_course,
-    mother_year_graduated,
-    mother_school_address,
-    mother_contact,
-    mother_occupation,
-    mother_employer,
-    mother_income,
-    mother_email,
-    guardian,
-    guardian_family_name,
-    guardian_given_name,
-    guardian_middle_name,
-    guardian_ext,
-    guardian_nickname,
-    guardian_address,
-    guardian_contact,
-    guardian_email,
-    annual_income,
-    schoolLevel,
-    schoolLastAttended,
-    schoolAddress,
-    courseProgram,
-    honor,
-    generalAverage,
-    yearGraduated,
-    strand,
-    cough,
-    colds,
-    fever,
-    asthma,
-    faintingSpells,
-    heartDisease,
-    tuberculosis,
-    frequentHeadaches,
-    hernia,
-    chronicCough,
-    headNeckInjury,
-    hiv,
-    highBloodPressure,
-    diabetesMellitus,
-    allergies,
-    cancer,
-    smokingCigarette,
-    alcoholDrinking,
-    hospitalized,
-    hospitalizationDetails,
-    medications,
-    hadCovid,
-    covidDate,
-    vaccine1Brand,
-    vaccine1Date,
-    vaccine2Brand,
-    vaccine2Date,
-    booster1Brand,
-    booster1Date,
-    booster2Brand,
-    booster2Date,
-    chestXray,
-    cbc,
-    urinalysis,
-    otherworkups,
-    symptomsToday,
-    remarks,
-    termsOfAgreement,
+    profile_img, campus, academicProgram, classifiedAs, program, program2, program3, yearLevel,
+    last_name, first_name, middle_name, extension, nickname, height, weight, lrnNumber, gender, pwdType, pwdId,
+    birthOfDate, age, birthPlace, languageDialectSpoken, citizenship, religion, civilStatus, tribeEthnicGroup, otherEthnicGroup,
+    cellphoneNumber, emailAddress, telephoneNumber, facebookAccount,
+    presentStreet, presentBarangay, presentZipCode, presentRegion, presentProvince, presentMunicipality, presentDswdHouseholdNumber,
+    permanentStreet, permanentBarangay, permanentZipCode, permanentRegion, permanentProvince, permanentMunicipality, permanentDswdHouseholdNumber,
+    solo_parent, father_deceased, father_family_name, father_given_name, father_middle_name, father_ext, father_nickname, father_education_level,
+    father_last_school, father_course, father_year_graduated, father_school_address, father_contact, father_occupation, father_employer,
+    father_income, father_email, mother_deceased, mother_family_name, mother_given_name, mother_middle_name, mother_nickname,
+    mother_education_level, mother_last_school, mother_course, mother_year_graduated, mother_school_address, mother_contact,
+    mother_occupation, mother_employer, mother_income, mother_email, guardian, guardian_family_name, guardian_given_name,
+    guardian_middle_name, guardian_ext, guardian_nickname, guardian_address, guardian_contact, guardian_email, annual_income,
+    schoolLevel, schoolLastAttended, schoolAddress, courseProgram, honor, generalAverage, yearGraduated, strand,
+    cough, colds, fever, asthma, faintingSpells, heartDisease, tuberculosis, frequentHeadaches, hernia, chronicCough,
+    headNeckInjury, hiv, highBloodPressure, diabetesMellitus, allergies, cancer, smokingCigarette, alcoholDrinking,
+    hospitalized, hospitalizationDetails, medications, hadCovid, covidDate, vaccine1Brand, vaccine1Date,
+    vaccine2Brand, vaccine2Date, booster1Brand, booster1Date, booster2Brand, booster2Date,
+    chestXray, cbc, urinalysis, otherworkups, symptomsToday, remarks, termsOfAgreement
   } = req.body;
 
   try {
-    const [result] = await db.execute(
-      `UPDATE person_table SET
-        profile_picture = ?, campus = ?, academicProgram = ?, classifiedAs = ?, program = ?, program2 = ?, program3 = ?, yearLevel = ?,
-        last_name = ?, first_name = ?, middle_name = ?, extension = ?, nickname = ?, height = ?, weight = ?, lrnNumber = ?, gender = ?, pwdType = ?, pwdId = ?,
-        birthOfDate = ?, age = ?, birthPlace = ?, languageDialectSpoken = ?, citizenship = ?, religion = ?, civilStatus = ?, tribeEthnicGroup = ?,
-        otherEthnicGroup = ?, cellphoneNumber = ?, emailAddress = ?, telephoneNumber = ?, facebookAccount = ?,
-        presentStreet = ?, presentBarangay = ?, presentZipCode = ?, presentRegion = ?, presentProvince = ?, presentMunicipality = ?, presentDswdHouseholdNumber = ?,
-        permanentStreet = ?, permanentBarangay = ?, permanentZipCode = ?, permanentRegion = ?, permanentProvince = ?, permanentMunicipality = ?, permanentDswdHouseholdNumber = ?,
-        solo_parent = ?, father_deceased = ?, father_family_name = ?, father_given_name = ?, father_middle_name = ?, father_ext = ?, father_nickname = ?, father_education_level = ?,
-        father_last_school = ?, father_course = ?, father_year_graduated = ?, father_school_address = ?, father_contact = ?, father_occupation = ?, father_employer = ?,
-        father_income = ?, father_email = ?, mother_deceased = ?, mother_family_name = ?, mother_given_name = ?, mother_middle_name = ?, mother_nickname = ?,
-        mother_education_level = ?, mother_last_school = ?, mother_course = ?, mother_year_graduated = ?, mother_school_address = ?, mother_contact = ?,
-        mother_occupation = ?, mother_employer = ?, mother_income = ?, mother_email = ?, guardian = ?, guardian_family_name = ?, guardian_given_name = ?,
-        guardian_middle_name = ?, guardian_ext = ?, guardian_nickname = ?, guardian_address = ?, guardian_contact = ?, guardian_email = ?, annual_income = ?,
-        schoolLevel = ?, schoolLastAttended = ?, schoolAddress = ?, courseProgram = ?, honor = ?, generalAverage = ?, yearGraduated = ?, strand = ?,
-        cough = ?, colds = ?, fever = ?, asthma = ?, faintingSpells = ?, heartDisease = ?, tuberculosis = ?, frequentHeadaches = ?, hernia = ?, chronicCough = ?,
-        headNeckInjury = ?, hiv = ?, highBloodPressure = ?, diabetesMellitus = ?, allergies = ?, cancer = ?, smokingCigarette = ?, alcoholDrinking = ?,
-        hospitalized = ?, hospitalizationDetails = ?, medications = ?, hadCovid = ?, covidDate = ?, vaccine1Brand = ?, vaccine1Date = ?,
-        vaccine2Brand = ?, vaccine2Date = ?, booster1Brand = ?, booster1Date = ?, booster2Brand = ?, booster2Date = ?,
-        chestXray = ?, cbc = ?, urinalysis = ?, otherworkups = ?, symptomsToday = ?, remarks = ?, termsOfAgreement = ?
-      WHERE person_id = ?`,
-      [
-        profile_picture,
-        campus,
-        academicProgram,
-        classifiedAs,
-        program,
-        program2,
-        program3,
-        yearLevel,
-        last_name,
-        first_name,
-        middle_name,
-        extension,
-        nickname,
-        height,
-        weight,
-        lrnNumber,
-        gender,
-        pwdType,
-        pwdId,
-        birthOfDate,
-        age,
-        birthPlace,
-        languageDialectSpoken,
-        citizenship,
-        religion,
-        civilStatus,
-        tribeEthnicGroup,
-        otherEthnicGroup,
-        cellphoneNumber,
-        emailAddress,
-        telephoneNumber,
-        facebookAccount,
-        presentStreet,
-        presentBarangay,
-        presentZipCode,
-        presentRegion,
-        presentProvince,
-        presentMunicipality,
-        presentDswdHouseholdNumber,
-        permanentStreet,
-        permanentBarangay,
-        permanentZipCode,
-        permanentRegion,
-        permanentProvince,
-        permanentMunicipality,
-        permanentDswdHouseholdNumber,
-        solo_parent,
-        father_deceased,
-        father_family_name,
-        father_given_name,
-        father_middle_name,
-        father_ext,
-        father_nickname,
-        father_education_level,
-        father_last_school,
-        father_course,
-        father_year_graduated,
-        father_school_address,
-        father_contact,
-        father_occupation,
-        father_employer,
-        father_income,
-        father_email,
-        mother_deceased,
-        mother_family_name,
-        mother_given_name,
-        mother_middle_name,
-        mother_nickname,
-        mother_education_level,
-        mother_last_school,
-        mother_course,
-        mother_year_graduated,
-        mother_school_address,
-        mother_contact,
-        mother_occupation,
-        mother_employer,
-        mother_income,
-        mother_email,
-        guardian,
-        guardian_family_name,
-        guardian_given_name,
-        guardian_middle_name,
-        guardian_ext,
-        guardian_nickname,
-        guardian_address,
-        guardian_contact,
-        guardian_email,
-        annual_income,
-        schoolLevel,
-        schoolLastAttended,
-        schoolAddress,
-        courseProgram,
-        honor,
-        generalAverage,
-        yearGraduated,
-        strand,
-        cough,
-        colds,
-        fever,
-        asthma,
-        faintingSpells,
-        heartDisease,
-        tuberculosis,
-        frequentHeadaches,
-        hernia,
-        chronicCough,
-        headNeckInjury,
-        hiv,
-        highBloodPressure,
-        diabetesMellitus,
-        allergies,
-        cancer,
-        smokingCigarette,
-        alcoholDrinking,
-        hospitalized,
-        hospitalizationDetails,
-        medications,
-        hadCovid,
-        covidDate,
-        vaccine1Brand,
-        vaccine1Date,
-        vaccine2Brand,
-        vaccine2Date,
-        booster1Brand,
-        booster1Date,
-        booster2Brand,
-        booster2Date,
-        chestXray,
-        cbc,
-        urinalysis,
-        otherworkups,
-        symptomsToday,
-        remarks,
-        termsOfAgreement,
-        id, // person_id for WHERE clause
-      ]
-    );
+    const [result] = await db.execute(`UPDATE person_table SET
+      profile_img=?, campus=?, academicProgram=?, classifiedAs=?, program=?, program2=?, program3=?, yearLevel=?,
+      last_name=?, first_name=?, middle_name=?, extension=?, nickname=?, height=?, weight=?, lrnNumber=?, gender=?, pwdType=?, pwdId=?,
+      birthOfDate=?, age=?, birthPlace=?, languageDialectSpoken=?, citizenship=?, religion=?, civilStatus=?, tribeEthnicGroup=?, otherEthnicGroup=?,
+      cellphoneNumber=?, emailAddress=?, telephoneNumber=?, facebookAccount=?,
+      presentStreet=?, presentBarangay=?, presentZipCode=?, presentRegion=?, presentProvince=?, presentMunicipality=?, presentDswdHouseholdNumber=?,
+      permanentStreet=?, permanentBarangay=?, permanentZipCode=?, permanentRegion=?, permanentProvince=?, permanentMunicipality=?, permanentDswdHouseholdNumber=?,
+      solo_parent=?, father_deceased=?, father_family_name=?, father_given_name=?, father_middle_name=?, father_ext=?, father_nickname=?, father_education_level=?,
+      father_last_school=?, father_course=?, father_year_graduated=?, father_school_address=?, father_contact=?, father_occupation=?, father_employer=?,
+      father_income=?, father_email=?, mother_deceased=?, mother_family_name=?, mother_given_name=?, mother_middle_name=?, mother_nickname=?,
+      mother_education_level=?, mother_last_school=?, mother_course=?, mother_year_graduated=?, mother_school_address=?, mother_contact=?,
+      mother_occupation=?, mother_employer=?, mother_income=?, mother_email=?, guardian=?, guardian_family_name=?, guardian_given_name=?,
+      guardian_middle_name=?, guardian_ext=?, guardian_nickname=?, guardian_address=?, guardian_contact=?, guardian_email=?, annual_income=?,
+      schoolLevel=?, schoolLastAttended=?, schoolAddress=?, courseProgram=?, honor=?, generalAverage=?, yearGraduated=?, strand=?,
+      cough=?, colds=?, fever=?, asthma=?, faintingSpells=?, heartDisease=?, tuberculosis=?, frequentHeadaches=?, hernia=?, chronicCough=?,
+      headNeckInjury=?, hiv=?, highBloodPressure=?, diabetesMellitus=?, allergies=?, cancer=?, smokingCigarette=?, alcoholDrinking=?,
+      hospitalized=?, hospitalizationDetails=?, medications=?, hadCovid=?, covidDate=?, vaccine1Brand=?, vaccine1Date=?,
+      vaccine2Brand=?, vaccine2Date=?, booster1Brand=?, booster1Date=?, booster2Brand=?, booster2Date=?,
+      chestXray=?, cbc=?, urinalysis=?, otherworkups=?, symptomsToday=?, remarks=?, termsOfAgreement=?
+      WHERE person_id=?`, [
+      profile_img, campus, academicProgram, classifiedAs, program, program2, program3, yearLevel,
+      last_name, first_name, middle_name, extension, nickname, height, weight, lrnNumber, gender, pwdType, pwdId,
+      birthOfDate, age, birthPlace, languageDialectSpoken, citizenship, religion, civilStatus, tribeEthnicGroup, otherEthnicGroup,
+      cellphoneNumber, emailAddress, telephoneNumber, facebookAccount,
+      presentStreet, presentBarangay, presentZipCode, presentRegion, presentProvince, presentMunicipality, presentDswdHouseholdNumber,
+      permanentStreet, permanentBarangay, permanentZipCode, permanentRegion, permanentProvince, permanentMunicipality, permanentDswdHouseholdNumber,
+      solo_parent, father_deceased, father_family_name, father_given_name, father_middle_name, father_ext, father_nickname, father_education_level,
+      father_last_school, father_course, father_year_graduated, father_school_address, father_contact, father_occupation, father_employer,
+      father_income, father_email, mother_deceased, mother_family_name, mother_given_name, mother_middle_name, mother_nickname,
+      mother_education_level, mother_last_school, mother_course, mother_year_graduated, mother_school_address, mother_contact,
+      mother_occupation, mother_employer, mother_income, mother_email, guardian, guardian_family_name, guardian_given_name,
+      guardian_middle_name, guardian_ext, guardian_nickname, guardian_address, guardian_contact, guardian_email, annual_income,
+      schoolLevel, schoolLastAttended, schoolAddress, courseProgram, honor, generalAverage, yearGraduated, strand,
+      cough, colds, fever, asthma, faintingSpells, heartDisease, tuberculosis, frequentHeadaches, hernia, chronicCough,
+      headNeckInjury, hiv, highBloodPressure, diabetesMellitus, allergies, cancer, smokingCigarette, alcoholDrinking,
+      hospitalized, hospitalizationDetails, medications, hadCovid, covidDate, vaccine1Brand, vaccine1Date,
+      vaccine2Brand, vaccine2Date, booster1Brand, booster1Date, booster2Brand, booster2Date,
+      chestXray, cbc, urinalysis, otherworkups, symptomsToday, remarks, termsOfAgreement, id
+    ]);
 
     if (result.affectedRows === 0) {
       return res.status(404).json({ error: "No record updated" });
     }
-
     res.json({ message: "Person updated successfully" });
   } catch (error) {
     console.error("Error updating person:", error);
     res.status(500).json({ error: "Database error" });
   }
 });
-
 
 // EXAM API ENDPOINTS
 app.get('/exam_slots', async (req, res) => {
