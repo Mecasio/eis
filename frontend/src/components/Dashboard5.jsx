@@ -20,8 +20,6 @@ const Dashboard5 = () => {
   });
 
 
-  const [message, setMessage] = useState("");
-
 
   // dot not alter
   useEffect(() => {
@@ -45,11 +43,11 @@ const Dashboard5 = () => {
   }, []);
 
   const steps = [
-    { label: "Personal Information", icon: <PersonIcon />, path: "/dashboard1" },
-    { label: "Family Background", icon: <FamilyRestroomIcon />, path: "/dashboard2" },
-    { label: "Educational Attainment", icon: <SchoolIcon />, path: "/dashboard3" },
-    { label: "Health Medical Records", icon: <HealthAndSafetyIcon />, path: "/dashboard4" },
-    { label: "Other Information", icon: <InfoIcon />, path: "/dashboard5" },
+    { label: "Personal Information", icon: <PersonIcon />, path: "/dashboard1", onChange: () => handleChange({ label: "Personal Information", path: "/dashboard1" }) },
+    { label: "Family Background", icon: <FamilyRestroomIcon />, path: "/dashboard2", onChange: () => handleChange({ label: "Family Background", path: "/dashboard2" }) },
+    { label: "Educational Attainment", icon: <SchoolIcon />, path: "/dashboard3", onChange: () => handleChange({ label: "Educational Attainment", path: "/dashboard3" }) },
+    { label: "Health Medical Records", icon: <HealthAndSafetyIcon />, path: "/dashboard4", onChange: () => handleChange({ label: "Health Medical Records", path: "/dashboard4" }) },
+    { label: "Other Information", icon: <InfoIcon />, path: "/dashboard5", onChange: () => handleChange({ label: "Other Information", path: "/dashboard5" }) },
   ];
 
   const [activeStep, setActiveStep] = useState(4);
@@ -59,10 +57,8 @@ const Dashboard5 = () => {
     try {
       const res = await axios.get(`http://localhost:5000/api/person/${id}`);
       setPerson(res.data);
-      setLoading(false);
     } catch (error) {
-      setMessage("Error fetching person data.");
-      setLoading(false);
+
     }
   };
   // dot not alter
@@ -73,6 +69,8 @@ const Dashboard5 = () => {
       [name]: type === "checkbox" ? (checked ? 1 : 0) : value,
     }));
   };
+
+
   // dot not alter
   const handleUpdate = async () => {
     try {
@@ -82,6 +80,16 @@ const Dashboard5 = () => {
       setMessage("Failed to update information.");
     }
   };
+
+  const handleBlur = async () => {
+    try {
+      await axios.put(`http://localhost:5000/api/person/${userID}`, person);
+      console.log("Auto-saved");
+    } catch (err) {
+      console.error("Auto-save failed", err);
+    }
+  };
+
 
 
   const handleLogout = () => {
@@ -272,6 +280,7 @@ const Dashboard5 = () => {
                 type="checkbox"
                 name="termsOfAgreement"
                 checked={person.termsOfAgreement === 1}
+                onBlur={handleBlur}
                 onChange={handleChange}
                 className="w-4 h-4"
               />
@@ -341,7 +350,6 @@ const Dashboard5 = () => {
 
             </Box>
 
-            {message && <p className="mt-4 text-center text-green-600">{message}</p>}
 
           </Container>
 
