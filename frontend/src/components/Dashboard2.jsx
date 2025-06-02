@@ -24,8 +24,6 @@ const Dashboard2 = () => {
     guardian_middle_name: "", guardian_ext: "", guardian_nickname: "", guardian_address: "", guardian_contact: "", guardian_email: "", annual_income: "",
   });
 
-  const [message, setMessage] = useState("");
-
 
   // dot not alter
   useEffect(() => {
@@ -52,20 +50,20 @@ const Dashboard2 = () => {
     try {
       const res = await axios.get(`http://localhost:5000/api/person/${id}`);
       setPerson(res.data);
-      setLoading(false);
+
     } catch (error) {
-      setMessage("Error fetching person data.");
-      setLoading(false);
+
     }
   };
 
   const steps = [
-    { label: "Personal Information", icon: <PersonIcon />, path: "/dashboard1" },
-    { label: "Family Background", icon: <FamilyRestroomIcon />, path: "/dashboard2" },
-    { label: "Educational Attainment", icon: <SchoolIcon />, path: "/dashboard3" },
-    { label: "Health Medical Records", icon: <HealthAndSafetyIcon />, path: "/dashboard4" },
-    { label: "Other Information", icon: <InfoIcon />, path: "/dashboard5" },
+    { label: "Personal Information", icon: <PersonIcon />, path: "/dashboard1", onChange: () => handleChange({ label: "Personal Information", path: "/dashboard1" }) },
+    { label: "Family Background", icon: <FamilyRestroomIcon />, path: "/dashboard2", onChange: () => handleChange({ label: "Family Background", path: "/dashboard2" }) },
+    { label: "Educational Attainment", icon: <SchoolIcon />, path: "/dashboard3", onChange: () => handleChange({ label: "Educational Attainment", path: "/dashboard3" }) },
+    { label: "Health Medical Records", icon: <HealthAndSafetyIcon />, path: "/dashboard4", onChange: () => handleChange({ label: "Health Medical Records", path: "/dashboard4" }) },
+    { label: "Other Information", icon: <InfoIcon />, path: "/dashboard5", onChange: () => handleChange({ label: "Other Information", path: "/dashboard5" }) },
   ];
+
 
   const [activeStep, setActiveStep] = useState(1);
   const [clickedSteps, setClickedSteps] = useState(Array(steps.length).fill(false));
@@ -87,6 +85,15 @@ const Dashboard2 = () => {
       setMessage("Failed to update information.");
     }
   };
+
+    const handleBlur = async () => {
+      try {
+        await axios.put(`http://localhost:5000/api/person/${userID}`, person);
+        console.log("Auto-saved");
+      } catch (err) {
+        console.error("Auto-save failed", err);
+      }
+    };
 
   const handleLogout = () => {
     localStorage.clear();
@@ -307,6 +314,7 @@ const Dashboard2 = () => {
                   checked={person.solo_parent === 1 || person.solo_parent === true}
                   value={person.solo_parent}
                   onChange={handleSoloParentChange}
+                  onBlur={handleBlur}
                   inputProps={{ "aria-label": "Solo Parent checkbox" }}
                   sx={{ width: 25, height: 25 }}
                 />
@@ -324,6 +332,7 @@ const Dashboard2 = () => {
                       value={person.parent_type || ""}
                       label="Mother/Father"
                       onChange={handleParentTypeChange}
+                      onBlur={handleBlur}
                     >
                       <MenuItem value="Mother">Mother</MenuItem>
                       <MenuItem value="Father">Father</MenuItem>
@@ -365,6 +374,7 @@ const Dashboard2 = () => {
                         name="father_family_name"
                         value={person.father_family_name}
                         onChange={handleChange}
+                        onBlur={handleBlur}
                       />
                     </Box>
                     <Box sx={{ flex: 1 }}>
@@ -375,6 +385,7 @@ const Dashboard2 = () => {
                         name="father_given_name"
                         value={person.father_given_name}
                         onChange={handleChange}
+                        onBlur={handleBlur}
                       />
                     </Box>
                     <Box sx={{ flex: 1 }}>
@@ -385,17 +396,23 @@ const Dashboard2 = () => {
                         name="father_middle_name"
                         value={person.father_middle_name}
                         onChange={handleChange}
+                        onBlur={handleBlur}
                       />
                     </Box>
                     <Box sx={{ flex: 1 }}>
                       <Typography variant="subtitle2" mb={1}>Father Extension</Typography>
-                      <TextField
-                        fullWidth
-                        size="small"
-                        name="father_ext"
-                        value={person.father_ext}
-                        onChange={handleChange}
-                      />
+                      <FormControl fullWidth size="small" required>
+                        <Select name="father_ext" value={person.father_ext || ""} onChange={handleChange} onBlur={handleBlur} displayEmpty>
+                          <MenuItem value="">None</MenuItem>
+                          <MenuItem value="Jr.">Jr.</MenuItem>
+                          <MenuItem value="Sr.">Sr.</MenuItem>
+                          <MenuItem value="I">I</MenuItem>
+                          <MenuItem value="II">II</MenuItem>
+                          <MenuItem value="III">III</MenuItem>
+                          <MenuItem value="IV">IV</MenuItem>
+                          <MenuItem value="V">V</MenuItem>
+                        </Select>
+                      </FormControl>
                     </Box>
                     <Box sx={{ flex: 1 }}>
                       <Typography variant="subtitle2" mb={1}>Father Nickname</Typography>
@@ -405,6 +422,7 @@ const Dashboard2 = () => {
                         name="father_nickname"
                         value={person.father_nickname}
                         onChange={handleChange}
+                        onBlur={handleBlur}
                       />
                     </Box>
                   </Box>
@@ -418,6 +436,7 @@ const Dashboard2 = () => {
                     control={
                       <Checkbox
                         checked={fatherEduNotApplicable}
+                        onBlur={handleBlur}
                         onChange={(e) => {
                           setFatherEduNotApplicable(e.target.checked);
                           if (e.target.checked) {
@@ -449,6 +468,7 @@ const Dashboard2 = () => {
                           name="father_education_level"
                           value={person.father_education_level}
                           onChange={handleChange}
+                          onBlur={handleBlur}
                         />
                       </Box>
                       <Box sx={{ flex: 1 }}>
@@ -460,6 +480,7 @@ const Dashboard2 = () => {
                           name="father_last_school"
                           value={person.father_last_school}
                           onChange={handleChange}
+                          onBlur={handleBlur}
                         />
                       </Box>
                       <Box sx={{ flex: 1 }}>
@@ -471,6 +492,7 @@ const Dashboard2 = () => {
                           name="father_course"
                           value={person.father_course}
                           onChange={handleChange}
+                          onBlur={handleBlur}
                         />
                       </Box>
                       <Box sx={{ flex: 1 }}>
@@ -481,6 +503,7 @@ const Dashboard2 = () => {
                           name="father_year_graduated"
                           value={person.father_year_graduated}
                           onChange={handleChange}
+                          onBlur={handleBlur}
                         />
                       </Box>
                       <Box sx={{ flex: 1 }}>
@@ -491,6 +514,7 @@ const Dashboard2 = () => {
                           name="father_school_address"
                           value={person.father_school_address}
                           onChange={handleChange}
+                          onBlur={handleBlur}
                         />
                       </Box>
                     </Box>
@@ -512,6 +536,7 @@ const Dashboard2 = () => {
                         name="father_contact"
                         value={person.father_contact}
                         onChange={handleChange}
+                        onBlur={handleBlur}
                       />
                     </Box>
                     <Box sx={{ flex: 1 }}>
@@ -522,6 +547,7 @@ const Dashboard2 = () => {
                         name="father_occupation"
                         value={person.father_occupation}
                         onChange={handleChange}
+                        onBlur={handleBlur}
                       />
                     </Box>
                     <Box sx={{ flex: 1 }}>
@@ -532,6 +558,7 @@ const Dashboard2 = () => {
                         name="father_employer"
                         value={person.father_employer}
                         onChange={handleChange}
+                        onBlur={handleBlur}
                       />
                     </Box>
                     <Box sx={{ flex: 1 }}>
@@ -542,6 +569,7 @@ const Dashboard2 = () => {
                         name="father_income"
                         value={person.father_income}
                         onChange={handleChange}
+                        onBlur={handleBlur}
                       />
                     </Box>
                   </Box>
@@ -554,6 +582,7 @@ const Dashboard2 = () => {
                       name="father_email"
                       value={person.father_email}
                       onChange={handleChange}
+                      onBlur={handleBlur}
                     />
                   </Box>
                 </>
@@ -586,6 +615,7 @@ const Dashboard2 = () => {
                         name="mother_family_name"
                         value={person.mother_family_name}
                         onChange={handleChange}
+                        onBlur={handleBlur}
                       />
                     </Box>
                     <Box sx={{ flex: 1 }}>
@@ -596,6 +626,7 @@ const Dashboard2 = () => {
                         name="mother_given_name"
                         value={person.mother_given_name}
                         onChange={handleChange}
+                        onBlur={handleBlur}
                       />
                     </Box>
                     <Box sx={{ flex: 1 }}>
@@ -606,17 +637,23 @@ const Dashboard2 = () => {
                         name="mother_middle_name"
                         value={person.mother_middle_name}
                         onChange={handleChange}
+                        onBlur={handleBlur}
                       />
                     </Box>
                     <Box sx={{ flex: 1 }}>
                       <Typography variant="subtitle2" mb={1}>Mother Extension</Typography>
-                      <TextField
-                        fullWidth
-                        size="small"
-                        name="mother_ext"
-                        value={person.mother_ext}
-                        onChange={handleChange}
-                      />
+                      <FormControl fullWidth size="small" required>
+                        <Select name="mother_ext" value={person.mother_ext || ""} onChange={handleChange} onBlur={handleBlur} displayEmpty>
+                          <MenuItem value="">None</MenuItem>
+                          <MenuItem value="Jr.">Jr.</MenuItem>
+                          <MenuItem value="Sr.">Sr.</MenuItem>
+                          <MenuItem value="I">I</MenuItem>
+                          <MenuItem value="II">II</MenuItem>
+                          <MenuItem value="III">III</MenuItem>
+                          <MenuItem value="IV">IV</MenuItem>
+                          <MenuItem value="V">V</MenuItem>
+                        </Select>
+                      </FormControl>
                     </Box>
                     <Box sx={{ flex: 1 }}>
                       <Typography variant="subtitle2" mb={1}>Mother Nickname</Typography>
@@ -626,6 +663,7 @@ const Dashboard2 = () => {
                         name="mother_nickname"
                         value={person.mother_nickname}
                         onChange={handleChange}
+                        onBlur={handleBlur}
                       />
                     </Box>
                   </Box>
@@ -670,6 +708,7 @@ const Dashboard2 = () => {
                           name="mother_education_level"
                           value={person.mother_education_level}
                           onChange={handleChange}
+                          onBlur={handleBlur}
                         />
                       </Box>
                       <Box sx={{ flex: 1 }}>
@@ -681,6 +720,7 @@ const Dashboard2 = () => {
                           name="mother_last_school"
                           value={person.mother_last_school}
                           onChange={handleChange}
+                          onBlur={handleBlur}
                         />
                       </Box>
                       <Box sx={{ flex: 1 }}>
@@ -692,6 +732,7 @@ const Dashboard2 = () => {
                           name="mother_course"
                           value={person.mother_course}
                           onChange={handleChange}
+                          onBlur={handleBlur}
                         />
                       </Box>
                       <Box sx={{ flex: 1 }}>
@@ -702,6 +743,7 @@ const Dashboard2 = () => {
                           name="mother_year_graduated"
                           value={person.mother_year_graduated}
                           onChange={handleChange}
+                          onBlur={handleBlur}
                         />
                       </Box>
                       <Box sx={{ flex: 1 }}>
@@ -712,6 +754,7 @@ const Dashboard2 = () => {
                           name="mother_school_address"
                           value={person.mother_school_address}
                           onChange={handleChange}
+                          onBlur={handleBlur}
                         />
                       </Box>
                     </Box>
@@ -734,6 +777,7 @@ const Dashboard2 = () => {
                         name="mother_contact"
                         value={person.mother_contact}
                         onChange={handleChange}
+                        onBlur={handleBlur}
                       />
                     </Box>
                     <Box sx={{ flex: 1 }}>
@@ -744,6 +788,7 @@ const Dashboard2 = () => {
                         name="mother_occupation"
                         value={person.mother_occupation}
                         onChange={handleChange}
+                        onBlur={handleBlur}
                       />
                     </Box>
                     <Box sx={{ flex: 1 }}>
@@ -754,6 +799,7 @@ const Dashboard2 = () => {
                         name="mother_employer"
                         value={person.mother_employer}
                         onChange={handleChange}
+                        onBlur={handleBlur}
                       />
                     </Box>
                     <Box sx={{ flex: 1 }}>
@@ -764,6 +810,7 @@ const Dashboard2 = () => {
                         name="mother_income"
                         value={person.mother_income}
                         onChange={handleChange}
+                        onBlur={handleBlur}
                       />
                     </Box>
                   </Box>
@@ -776,6 +823,7 @@ const Dashboard2 = () => {
                       name="mother_email"
                       value={person.mother_email}
                       onChange={handleChange}
+                      onBlur={handleBlur}
                     />
                   </Box>
                 </>
@@ -799,6 +847,7 @@ const Dashboard2 = () => {
                   id="guardian-select"
                   value={person.guardian}
                   onChange={handleChange}
+                  onBlur={handleBlur}
                   name="guardian"
                   label="Guardian"
                 // value and onChange go here
@@ -832,6 +881,7 @@ const Dashboard2 = () => {
                   name="guardian_family_name"
                   value={person.guardian_family_name}
                   onChange={handleChange}
+                  onBlur={handleBlur}
                 />
               </Box>
 
@@ -843,6 +893,7 @@ const Dashboard2 = () => {
                   name="guardian_given_name"
                   value={person.guardian_given_name}
                   onChange={handleChange}
+                  onBlur={handleBlur}
                 />
               </Box>
 
@@ -854,18 +905,24 @@ const Dashboard2 = () => {
                   name="guardian_middle_name"
                   value={person.guardian_middle_name}
                   onChange={handleChange}
+                  onBlur={handleBlur}
                 />
               </Box>
 
               <Box sx={{ flex: 1 }}>
                 <Typography variant="subtitle2" mb={1}>Guardian Name Extension</Typography>
-                <TextField
-                  fullWidth
-                  size="small"
-                  name="guardian_ext"
-                  value={person.guardian_ext}
-                  onChange={handleChange}
-                />
+                <FormControl fullWidth size="small" required>
+                  <Select name="guardian_ext" value={person.guardian_ext || ""} onChange={handleChange} onBlur={handleBlur} displayEmpty>
+                    <MenuItem value="">None</MenuItem>
+                    <MenuItem value="Jr.">Jr.</MenuItem>
+                    <MenuItem value="Sr.">Sr.</MenuItem>
+                    <MenuItem value="I">I</MenuItem>
+                    <MenuItem value="II">II</MenuItem>
+                    <MenuItem value="III">III</MenuItem>
+                    <MenuItem value="IV">IV</MenuItem>
+                    <MenuItem value="V">V</MenuItem>
+                  </Select>
+                </FormControl>
               </Box>
 
               <Box sx={{ flex: 1 }}>
@@ -877,6 +934,7 @@ const Dashboard2 = () => {
                   name="guardian_nickname"
                   value={person.guardian_nickname}
                   onChange={handleChange}
+                  onBlur={handleBlur}
                 />
               </Box>
             </Box>
@@ -886,7 +944,7 @@ const Dashboard2 = () => {
 
             <div className="mb-4">
               <label className="block mb-1 font-small">Guardian Address</label>
-              <input type="text" name="guardian_Address" value={person.guardian_address} onChange={handleChange} className="w-full border px-3 py-2 rounded" />
+              <input type="text" name="guardian_Address" value={person.guardian_address} onChange={handleChange} onBlur={handleBlur} className="w-full border px-3 py-2 rounded" />
             </div>
             <Box sx={{ display: 'flex', gap: 2, mb: 2, flexWrap: 'wrap' }}>
               <Box sx={{ flex: 1 }}>
@@ -897,6 +955,7 @@ const Dashboard2 = () => {
                   name="guardian_contact"
                   value={person.guardian_contact}
                   onChange={handleChange}
+                  onBlur={handleBlur}
                 />
               </Box>
 
@@ -908,6 +967,7 @@ const Dashboard2 = () => {
                   name="guardian_email"
                   value={person.guardian_email}
                   onChange={handleChange}
+                  onBlur={handleBlur}
                 />
               </Box>
             </Box>
@@ -927,6 +987,7 @@ const Dashboard2 = () => {
                 name="annual_income"
                 value={person.annual_income}
                 onChange={handleChange}
+                onBlur={handleBlur}
               >
                 <MenuItem value="80,000 and below">80,000 and below</MenuItem>
                 <MenuItem value="80,000 to 135,000">80,000 above but not more than 135,000</MenuItem>
@@ -999,8 +1060,6 @@ const Dashboard2 = () => {
               </Button>
             </Box>
 
-
-            {message && <p className="mt-4 text-center text-green-600">{message}</p>}
 
           </Container>
         </form>
