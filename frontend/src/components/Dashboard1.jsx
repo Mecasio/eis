@@ -18,7 +18,7 @@ const Dashboard1 = () => {
   const [user, setUser] = useState("");
   const [userRole, setUserRole] = useState("");
   const [person, setPerson] = useState({
-    profile_picture: "",
+    profile_img: "",
     campus: "",
     academicProgram: "",
     classifiedAs: "",
@@ -65,8 +65,6 @@ const Dashboard1 = () => {
     permanentDswdHouseholdNumber: "",
   });
   const [groupedPrograms, setGroupedPrograms] = useState({});
-  const [loading, setLoading] = useState(false);
-  const [message, setMessage] = useState("");
 
   // dot not alter
   useEffect(() => {
@@ -90,12 +88,13 @@ const Dashboard1 = () => {
   }, []);
 
   const steps = [
-    { label: "Personal Information", icon: <PersonIcon />, path: "/dashboard1" },
-    { label: "Family Background", icon: <FamilyRestroomIcon />, path: "/dashboard2" },
-    { label: "Educational Attainment", icon: <SchoolIcon />, path: "/dashboard3" },
-    { label: "Health Medical Records", icon: <HealthAndSafetyIcon />, path: "/dashboard4" },
-    { label: "Other Information", icon: <InfoIcon />, path: "/dashboard5" },
+    { label: "Personal Information", icon: <PersonIcon />, path: "/dashboard1", onChange: () => handleChange({ label: "Personal Information", path: "/dashboard1" }) },
+    { label: "Family Background", icon: <FamilyRestroomIcon />, path: "/dashboard2", onChange: () => handleChange({ label: "Family Background", path: "/dashboard2" }) },
+    { label: "Educational Attainment", icon: <SchoolIcon />, path: "/dashboard3", onChange: () => handleChange({ label: "Educational Attainment", path: "/dashboard3" }) },
+    { label: "Health Medical Records", icon: <HealthAndSafetyIcon />, path: "/dashboard4", onChange: () => handleChange({ label: "Health Medical Records", path: "/dashboard4" }) },
+    { label: "Other Information", icon: <InfoIcon />, path: "/dashboard5", onChange: () => handleChange({ label: "Other Information", path: "/dashboard5" }) },
   ];
+
 
   const [activeStep, setActiveStep] = useState(0);
   const [clickedSteps, setClickedSteps] = useState(Array(steps.length).fill(false));
@@ -112,10 +111,7 @@ const Dashboard1 = () => {
     try {
       const res = await axios.get(`http://localhost:5000/api/person/${id}`);
       setPerson(res.data);
-      setLoading(true); // you might want to set this to false initially, see note below
     } catch (error) {
-      setMessage("Error fetching person data.");
-      setLoading(true); // same here
     }
   };
   // dot not alter
@@ -136,6 +132,40 @@ const Dashboard1 = () => {
       setMessage("Failed to update information.");
     }
   };
+
+  const handleBlur = async () => {
+    try {
+      await axios.put(`http://localhost:5000/api/person/${userID}`, person);
+      console.log("Auto-saved");
+    } catch (err) {
+      console.error("Auto-save failed", err);
+    }
+  };
+
+  const handleProfileImageUpload = async (event) => {
+    const file = event.target.files[0];
+    if (!file) return;
+
+    const formData = new FormData();
+    formData.append("profile_img", file);
+
+    try {
+      const response = await axios.post(
+        `http://localhost:5000/api/person/${userID}/upload-profile`,
+        formData,
+        { headers: { "Content-Type": "multipart/form-data" } }
+      );
+
+      const newFilename = response.data.profile_picture;
+      setPerson((prev) => ({ ...prev, profile_picture: newFilename }));
+      setUploadedImage(`http://localhost:5000/uploads/${newFilename}`);
+    } catch (error) {
+      console.error("Image upload failed:", error);
+      alert("Failed to upload image");
+    }
+  };
+
+
 
   const [uploadedImage, setUploadedImage] = useState(null);
   const [preview, setPreview] = useState(null);
@@ -170,16 +200,41 @@ const Dashboard1 = () => {
     }
   };
 
-  const handleUpload = () => {
+  const handleUpload = async () => {
     if (!selectedFile) {
       alert("Please select a file first.");
       return;
     }
 
-    setUploadedImage(preview); // ✅ Set image to show in outer box
-    alert("Upload successful!");
-    handleClose();
+    const formData = new FormData();
+    formData.append("profile_img", selectedFile);
+
+    try {
+      const response = await axios.post(
+        `http://localhost:5000/api/person/${userID}/upload-profile`,
+        formData,
+        {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        }
+      );
+
+      const fileName = response.data.profile_img;
+
+      // Immediately update the image shown in the box
+      setUploadedImage(`http://localhost:5000/uploads/${fileName}`);
+      setPerson((prev) => ({ ...prev, profile_img: fileName }));
+
+      alert("Upload successful!");
+      handleClose();
+    } catch (error) {
+      console.error("Upload failed:", error);
+      alert("Upload failed.");
+    }
   };
+
+
   const [isLrnNA, setIsLrnNA] = useState(false);
   const [isChecked, setIsChecked] = useState(false);
 
@@ -500,7 +555,7 @@ const Dashboard1 = () => {
               <label className="w-40 font-medium">Campus:</label>
               <FormControl fullWidth size="small">
                 <InputLabel id="campus-label">Campus (Manila/Cavite)</InputLabel>
-                <Select labelId="campus-label" id="campus-select" name="campus" value={person.campus || ""} label="Campus (Manila/Cavite)" onChange={handleChange}>
+                <Select labelId="campus-label" id="campus-select" name="campus" value={person.campus || ""} onBlur={handleBlur} label="Campus (Manila/Cavite)" onChange={handleChange}>
                   <MenuItem value="MANILA">MANILA</MenuItem>
                   <MenuItem value="CAVITE">CAVITE</MenuItem>
                 </Select>
@@ -511,7 +566,7 @@ const Dashboard1 = () => {
               <label className="w-40 font-medium">Academic Program:</label>
               <FormControl fullWidth size="small" required>
                 <InputLabel id="academic-program-label">Academic Program</InputLabel>
-                <Select labelId="academic-program-label" id="academic-program-select" name="academicProgram" value={person.academicProgram || ""} label="Academic Program" onChange={handleChange}>
+                <Select labelId="academic-program-label" id="academic-program-select" name="academicProgram" onBlur={handleBlur} value={person.academicProgram || ""} label="Academic Program" onChange={handleChange}>
                   <MenuItem value="Techvoc">Techvoc</MenuItem>
                   <MenuItem value="Undergraduate">Undergraduate</MenuItem>
                   <MenuItem value="Graduate">Graduate</MenuItem>
@@ -523,7 +578,7 @@ const Dashboard1 = () => {
               <label className="w-40 font-medium">Classified As:</label>
               <FormControl fullWidth size="small" required>
                 <InputLabel id="classified-as-label">Classified As</InputLabel>
-                <Select labelId="classified-as-label" id="classified-as-select" name="classifiedAs" value={person.classifiedAs || ""} label="Classified As" onChange={handleChange}>
+                <Select labelId="classified-as-label" id="classified-as-select" name="classifiedAs" onBlur={handleBlur} value={person.classifiedAs || ""} label="Classified As" onChange={handleChange}>
                   <MenuItem value="Freshman (First Year)">Freshman (First Year)</MenuItem>
                   <MenuItem value="Transferee">Transferee</MenuItem>
                   <MenuItem value="Returnee">Returnee</MenuItem>
@@ -544,13 +599,13 @@ const Dashboard1 = () => {
               <Box display="flex" flexDirection="column" sx={{ width: "75%" }}>
                 {/* Program */}
                 {/* Program 22222*/}
-                <Box display="flex" flexDirection="column" sx={{ width: "75%" }}>
+                <Box display="flex" flexDirection="column" sx={{ width: "100%" }}>
                   {/* Program 1 */}
                   <Box display="flex" alignItems="center" gap={2} mb={1}>
                     <label className="w-40 font-medium">Program:</label>
                     <FormControl fullWidth size="small">
                       <InputLabel>Program</InputLabel>
-                      <Select name="program" value={person.program} onChange={handleChange} label="Program">
+                      <Select name="program" value={person.program} onBlur={handleBlur} onChange={handleChange} label="Program">
                         {curriculumOptions.map((item, index) => (
                           <MenuItem key={index} value={item.curriculum_id}>
                             {item.program_description}
@@ -565,7 +620,7 @@ const Dashboard1 = () => {
                     <label className="w-40 font-medium">Program 2:</label>
                     <FormControl fullWidth size="small">
                       <InputLabel>Program 2</InputLabel>
-                      <Select name="program2" value={person.program2} onChange={handleChange} label="Program 2">
+                      <Select name="program2" value={person.program2} onBlur={handleBlur} onChange={handleChange} label="Program 2">
                         {curriculumOptions.map((item, index) => (
                           <MenuItem key={index} value={item.curriculum_id}>
                             {item.program_description}
@@ -580,7 +635,7 @@ const Dashboard1 = () => {
                     <label className="w-40 font-medium">Program 3:</label>
                     <FormControl fullWidth size="small">
                       <InputLabel>Program 3</InputLabel>
-                      <Select name="program3" value={person.program3} onChange={handleChange} label="Program 3">
+                      <Select name="program3" value={person.program3} onBlur={handleBlur} onChange={handleChange} label="Program 3">
                         {curriculumOptions.map((item, index) => (
                           <MenuItem key={index} value={item.curriculum_id}>
                             {item.program_description}
@@ -591,8 +646,6 @@ const Dashboard1 = () => {
                   </Box>
                 </Box>
               </Box>
-
-              {/* Right Side: Image Box */}
               <Box
                 sx={{
                   textAlign: "center",
@@ -607,10 +660,10 @@ const Dashboard1 = () => {
                   alignItems: "center",
                 }}
               >
-                {uploadedImage ? (
+                {person.profile_img ? (
                   <img
-                    src={uploadedImage}
-                    alt="Uploaded"
+                    src={`http://localhost:5000/uploads/${person.profile_img}`}
+                    alt="Profile"
                     style={{
                       width: "100%",
                       height: "100%",
@@ -618,21 +671,17 @@ const Dashboard1 = () => {
                     }}
                   />
                 ) : (
-                  <Box
-                    sx={{
-                      width: "100%",
-                      height: "100%",
-                      backgroundColor: "white",
-                    }}
-                  />
+                  <Box sx={{ width: "100%", height: "100%", backgroundColor: "white" }} />
                 )}
               </Box>
+
+
             </Box>
             <div className="flex items-center mb-4 gap-4">
               <label className="w-40 font-medium">Year Level:</label>
               <FormControl fullWidth size="small" required>
                 <InputLabel id="year-level-label">Year Level</InputLabel>
-                <Select labelId="year-level-label" id="year-level-select" name="yearLevel" value={person.yearLevel || ""} label="Year Level" onChange={handleChange}>
+                <Select labelId="year-level-label" id="year-level-select" name="yearLevel" onBlur={handleBlur} value={person.yearLevel || ""} label="Year Level" onChange={handleChange}>
                   <MenuItem value="First Year">First Year</MenuItem>
                   <MenuItem value="Second Year">Second Year</MenuItem>
                   <MenuItem value="Third Year">Third Year</MenuItem>
@@ -651,26 +700,26 @@ const Dashboard1 = () => {
                 <Typography mb={1} fontWeight="medium">
                   Last Name
                 </Typography>
-                <TextField fullWidth size="small" name="last_name" value={person.last_name} onChange={handleChange} />
+                <TextField fullWidth size="small" name="last_name" onBlur={handleBlur} value={person.last_name} onChange={handleChange} />
               </Box>
               <Box flex="1 1 20%">
                 <Typography mb={1} fontWeight="medium">
                   First Name
                 </Typography>
-                <TextField fullWidth size="small" name="first_name" value={person.first_name} onChange={handleChange} />
+                <TextField fullWidth size="small" name="first_name" onBlur={handleBlur} value={person.first_name} onChange={handleChange} />
               </Box>
               <Box flex="1 1 20%">
                 <Typography mb={1} fontWeight="medium">
                   Middle Name
                 </Typography>
-                <TextField fullWidth size="small" name="middle_name" value={person.middle_name} onChange={handleChange} />
+                <TextField fullWidth size="small" name="middle_name" onBlur={handleBlur} value={person.middle_name} onChange={handleChange} />
               </Box>
               <Box flex="1 1 20%">
                 <Typography mb={1} fontWeight="medium">
                   Extension
                 </Typography>
                 <FormControl fullWidth size="small" required>
-                  <Select name="extension" value={person.extension || ""} onChange={handleChange} displayEmpty>
+                  <Select name="extension" value={person.extension || ""} onBlur={handleBlur} onChange={handleChange} displayEmpty>
                     <MenuItem value="">None</MenuItem>
                     <MenuItem value="Jr.">Jr.</MenuItem>
                     <MenuItem value="Sr.">Sr.</MenuItem>
@@ -687,7 +736,7 @@ const Dashboard1 = () => {
                 <Typography mb={1} fontWeight="medium">
                   Nickname
                 </Typography>
-                <TextField fullWidth size="small" name="nickname" value={person.nickname} onChange={handleChange} />
+                <TextField fullWidth size="small" name="nickname" onBlur={handleBlur} value={person.nickname} onChange={handleChange} />
               </Box>
             </Box>
             <Box display="flex" gap={4} mb={2}>
@@ -695,14 +744,14 @@ const Dashboard1 = () => {
                 <Typography fontWeight="medium" minWidth="60px">
                   Height:
                 </Typography>
-                <TextField size="small" name="height" value={person.height} onChange={handleChange} fullWidth />
+                <TextField size="small" name="height" value={person.height} onBlur={handleBlur} onChange={handleChange} fullWidth />
               </Box>
 
               <Box display="flex" alignItems="center" flex="0 0 15%" gap={1}>
                 <Typography fontWeight="medium" minWidth="60px">
                   Weight:
                 </Typography>
-                <TextField size="small" name="weight" value={person.weight} onChange={handleChange} fullWidth />
+                <TextField size="small" name="weight" value={person.weight} onBlur={handleBlur} onChange={handleChange} fullWidth />
               </Box>
             </Box>
             <Box display="flex" gap={2} mb={2} alignItems="center">
@@ -750,6 +799,7 @@ const Dashboard1 = () => {
                 name="gender"
                 value={person.gender || ""}
                 onChange={handleChange}
+                onBlur={handleBlur}
                 sx={{ width: 150, height: 40 }}
                 SelectProps={{ sx: { height: 40, paddingTop: 0.5, paddingBottom: 0.5 } }}
                 InputProps={{ sx: { height: 40 } }}
@@ -770,6 +820,7 @@ const Dashboard1 = () => {
                 name="pwdType"
                 value={person.pwdType || ""}
                 onChange={handleChange}
+                onBlur={handleBlur}
                 disabled={!isChecked}
                 sx={{ width: 200, height: 40 }}
                 SelectProps={{ sx: { height: 40, paddingTop: 0.5, paddingBottom: 0.5 } }}
@@ -801,7 +852,7 @@ const Dashboard1 = () => {
               </TextField>
 
               {/* PWD ID */}
-              <TextField size="small" label="PWD ID" name="pwdId" value={person.pwdId || ""} onChange={handleChange} disabled={!isChecked} sx={{ width: 200, height: 40 }} InputProps={{ sx: { height: 40 } }} inputProps={{ style: { height: 40, padding: "10.5px 14px" } }} />
+              <TextField size="small" label="PWD ID" name="pwdId" value={person.pwdId || ""} onBlur={handleBlur} onChange={handleChange} disabled={!isChecked} sx={{ width: 200, height: 40 }} InputProps={{ sx: { height: 40 } }} inputProps={{ style: { height: 40, padding: "10.5px 14px" } }} />
             </Box>
 
             {/* Row 1: Birth Place + Citizenship */}
@@ -810,19 +861,19 @@ const Dashboard1 = () => {
                 <Typography mb={1} fontWeight="medium">
                   Birth of Date
                 </Typography>
-                <TextField fullWidth size="small" type="date" name="birthOfDate" value={person.birthOfDate} onChange={handleChange} />
+                <TextField fullWidth size="small" type="date" name="birthOfDate" onBlur={handleBlur} value={person.birthOfDate} onChange={handleChange} />
               </Box>
               <Box flex={1}>
                 <Typography mb={1} fontWeight="medium">
                   Age
                 </Typography>
-                <TextField fullWidth size="small" name="age" value={person.age} onChange={handleChange} />
+                <TextField fullWidth size="small" name="age" value={person.age} onBlur={handleBlur} onChange={handleChange} />
               </Box>
               <Box flex={1}>
                 <Typography mb={1} fontWeight="medium">
                   Birth Place
                 </Typography>
-                <TextField fullWidth size="small" name="birthPlace" value={person.birthPlace} onChange={handleChange} />
+                <TextField fullWidth size="small" name="birthPlace" value={person.birthPlace} onBlur={handleBlur} onChange={handleChange} />
               </Box>
             </Box>
 
@@ -832,7 +883,7 @@ const Dashboard1 = () => {
                 <Typography mb={1} fontWeight="medium">
                   Language/Dialect Spoken
                 </Typography>
-                <TextField fullWidth size="small" name="languageDialectSpoken" value={person.languageDialectSpoken || ""} onChange={handleChange} />
+                <TextField fullWidth size="small" name="languageDialectSpoken" value={person.languageDialectSpoken || ""} onBlur={handleBlur} onChange={handleChange} />
               </Box>
 
               <Box flex={1}>
@@ -840,7 +891,7 @@ const Dashboard1 = () => {
                   Citizenship
                 </Typography>
                 <FormControl fullWidth size="small" required>
-                  <Select name="citizenship" value={person.citizenship || ""} onChange={handleChange} displayEmpty>
+                  <Select name="citizenship" value={person.citizenship || ""} onChange={handleChange} onBlur={handleBlur} displayEmpty>
                     <MenuItem value="" disabled>
                       Select Citizenship
                     </MenuItem>
@@ -968,7 +1019,7 @@ const Dashboard1 = () => {
                   Religion
                 </Typography>
                 <FormControl fullWidth size="small" required>
-                  <Select name="religion" value={person.religion || ""} onChange={handleChange} displayEmpty>
+                  <Select name="religion" value={person.religion || ""} onChange={handleChange} onBlur={handleBlur} displayEmpty>
                     <MenuItem value="" disabled>
                       Select Religion
                     </MenuItem>
@@ -1007,7 +1058,7 @@ const Dashboard1 = () => {
                   Civil Status
                 </Typography>
                 <FormControl fullWidth size="small" required>
-                  <Select name="civilStatus" value={person.civilStatus || "-civil status-"} onChange={handleChange}>
+                  <Select name="civilStatus" value={person.civilStatus || "-civil status-"} onBlur={handleBlur} onChange={handleChange}>
                     <MenuItem value="-civil status-" disabled>
                       - civil status -
                     </MenuItem>
@@ -1025,7 +1076,7 @@ const Dashboard1 = () => {
                   Tribe/Ethnic Group
                 </Typography>
                 <FormControl fullWidth size="small" required>
-                  <Select name="tribeEthnicGroup" value={person.tribeEthnicGroup || ""} onChange={handleChange} displayEmpty>
+                  <Select name="tribeEthnicGroup" value={person.tribeEthnicGroup || ""} onBlur={handleBlur} onChange={handleChange} displayEmpty>
                     <MenuItem value="" disabled>
                       Select Tribe/Ethnic Group
                     </MenuItem>
@@ -1083,7 +1134,7 @@ const Dashboard1 = () => {
                 <Typography mb={1} fontWeight="medium">
                   Other Ethnic Group
                 </Typography>
-                <TextField fullWidth size="small" name="otherEthnicGroup" value={person.otherEthnicGroup} onChange={handleChange} />
+                <TextField fullWidth size="small" name="otherEthnicGroup" value={person.otherEthnicGroup} onBlur={handleBlur} onChange={handleChange} />
               </Box>
             </Box>
 
@@ -1097,13 +1148,13 @@ const Dashboard1 = () => {
                 <Typography mb={1} fontWeight="medium">
                   Cellphone Number
                 </Typography>
-                <TextField fullWidth size="small" name="cellphoneNumber" value={person.cellphoneNumber} onChange={handleChange} />
+                <TextField fullWidth size="small" name="cellphoneNumber" value={person.cellphoneNumber} onBlur={handleBlur} onChange={handleChange} />
               </Box>
               <Box flex={1}>
                 <Typography mb={1} fontWeight="medium">
                   Email Address
                 </Typography>
-                <TextField fullWidth size="small" name="emailAddress" value={person.emailAddress} onChange={handleChange} />
+                <TextField fullWidth size="small" name="emailAddress" value={person.emailAddress} onBlur={handleBlur} onChange={handleChange} />
               </Box>
             </Box>
 
@@ -1112,13 +1163,13 @@ const Dashboard1 = () => {
                 <Typography mb={1} fontWeight="medium">
                   Telephone Number
                 </Typography>
-                <TextField fullWidth size="small" name="telephoneNumber" value={person.telephoneNumber} onChange={handleChange} />
+                <TextField fullWidth size="small" name="telephoneNumber" value={person.telephoneNumber} onBlur={handleBlur} onChange={handleChange} />
               </Box>
               <Box flex={1}>
                 <Typography mb={1} fontWeight="medium">
                   Facebook Account
                 </Typography>
-                <TextField fullWidth size="small" name="facebookAccount" value={person.facebookAccount} onChange={handleChange} />
+                <TextField fullWidth size="small" name="facebookAccount" value={person.facebookAccount} onBlur={handleBlur} onChange={handleChange} />
               </Box>
             </Box>
 
@@ -1130,13 +1181,13 @@ const Dashboard1 = () => {
                 <Typography mb={1} fontWeight="medium">
                   Present Street
                 </Typography>
-                <TextField fullWidth size="small" name="presentStreet" value={person.presentStreet} onChange={handleChange} />
+                <TextField fullWidth size="small" name="presentStreet" value={person.presentStreet} onBlur={handleBlur} onChange={handleChange} />
               </Box>
               <Box flex={1}>
                 <Typography mb={1} fontWeight="medium">
                   Present Zip Code
                 </Typography>
-                <TextField fullWidth size="small" name="presentZipCode" value={person.presentZipCode} onChange={handleChange} />
+                <TextField fullWidth size="small" name="presentZipCode" value={person.presentZipCode} onBlur={handleBlur} onChange={handleChange} />
               </Box>
             </Box>
 
@@ -1149,6 +1200,7 @@ const Dashboard1 = () => {
                   <Select
                     name="presentRegion"
                     value={person.presentRegion}
+                    onBlur={handleBlur}
                     onChange={(e) => {
                       handleChange(e);
                       setSelectedRegion(e.target.value);
@@ -1181,6 +1233,7 @@ const Dashboard1 = () => {
                   <Select
                     name="presentProvince"
                     value={person.presentProvince}
+                    onBlur={handleBlur}
                     onChange={(e) => {
                       handleChange(e);
                       setSelectedProvince(e.target.value);
@@ -1213,6 +1266,7 @@ const Dashboard1 = () => {
                   <Select
                     name="presentMunicipality"
                     value={person.presentMunicipality}
+                    onBlur={handleBlur}
                     onChange={(e) => {
                       handleChange(e);
                       setSelectedCity(e.target.value);
@@ -1241,6 +1295,7 @@ const Dashboard1 = () => {
                   <Select
                     name="presentBarangay"
                     value={person.presentBarangay}
+                    onBlur={handleBlur}
                     onChange={(e) => {
                       handleChange(e);
                       setSelectedBarangay(e.target.value);
@@ -1265,7 +1320,7 @@ const Dashboard1 = () => {
               <Typography mb={1} fontWeight="medium">
                 Present DSWD Household Number
               </Typography>
-              <TextField fullWidth size="small" name="presentDswdHouseholdNumber" value={person.presentDswdHouseholdNumber} onChange={handleChange} />
+              <TextField fullWidth size="small" name="presentDswdHouseholdNumber" value={person.presentDswdHouseholdNumber} onBlur={handleBlur} onChange={handleChange} />
             </Box>
 
             <Typography style={{ fontSize: "20px", color: "#6D2323", fontWeight: "bold" }}>Permanent Address:</Typography>
@@ -1277,13 +1332,13 @@ const Dashboard1 = () => {
                 <Typography mb={1} fontWeight="medium">
                   Permanent Street
                 </Typography>
-                <TextField fullWidth size="small" name="permanentStreet" value={person.permanentStreet} onChange={handleChange} />
+                <TextField fullWidth size="small" name="permanentStreet" value={person.permanentStreet} onBlur={handleBlur} onChange={handleChange} />
               </Box>
               <Box flex={1}>
                 <Typography mb={1} fontWeight="medium">
                   Permanent Zip Code
                 </Typography>
-                <TextField fullWidth size="small" name="permanentZipCode" value={person.permanentZipCode} onChange={handleChange} />
+                <TextField fullWidth size="small" name="permanentZipCode" value={person.permanentZipCode} onBlur={handleBlur} onChange={handleChange} />
               </Box>
             </Box>
 
@@ -1296,6 +1351,7 @@ const Dashboard1 = () => {
                   <Select
                     name="permanentRegion"
                     value={person.permanentRegion}
+                    onBlur={handleBlur}
                     onChange={(e) => {
                       handleChange(e);
                       setPermanentRegion(e.target.value);
@@ -1324,7 +1380,9 @@ const Dashboard1 = () => {
                   <Select
                     name="permanentProvince"
                     value={person.permanentProvince}
+                    onBlur={handleBlur}
                     onChange={(e) => {
+
                       handleChange(e);
                       setPermanentProvince(e.target.value);
                       setPermanentCityList([]);
@@ -1354,6 +1412,7 @@ const Dashboard1 = () => {
                   <Select
                     name="permanentMunicipality"
                     value={person.permanentMunicipality}
+                    onBlur={handleBlur}
                     onChange={(e) => {
                       handleChange(e);
                       setPermanentCity(e.target.value);
@@ -1381,6 +1440,7 @@ const Dashboard1 = () => {
                   <Select
                     name="permanentBarangay"
                     value={person.permanentBarangay}
+                    onBlur={handleBlur}
                     onChange={(e) => {
                       handleChange(e);
                       setPermanentBarangay(e.target.value);
@@ -1408,6 +1468,7 @@ const Dashboard1 = () => {
                 fullWidth
                 size="small"
                 variant="outlined"
+                onBlur={handleBlur}
                 value={person.permanentDswdHouseholdNumber || ""}
                 InputProps={{
                   readOnly: true, // Optional: make it read-only if you're not using onChange
@@ -1646,7 +1707,7 @@ const Dashboard1 = () => {
               </Button>
             </Box>
 
-            {message && <p className="mt-4 text-center text-green-600">{message}</p>}
+
           </Container>
         </form>
       </Container>
