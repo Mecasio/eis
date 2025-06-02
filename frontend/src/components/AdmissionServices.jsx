@@ -99,6 +99,32 @@ const SearchStudentCOR = () => {
 
     return (
         <Box sx={{ height: 'calc(100vh - 120px)', overflowY: 'auto', paddingRight: 1, backgroundColor: 'transparent' }}>
+      <Container>
+        <h1 style={{ fontSize: "40px", fontWeight: "bold", textAlign: "Left", color: "maroon", marginTop: "25px" }}> ADMISSION SERVICES</h1>
+        <hr style={{ border: "1px solid #ccc", width: "37%" }} />
+        <button
+          onClick={printDiv}
+          style={{
+            marginBottom: "1rem",
+            padding: "10px 20px",
+            border: "2px solid black",
+            backgroundColor: "#f0f0f0",
+            color: "black",
+            borderRadius: "5px",
+            marginTop: "20px",
+            cursor: "pointer",
+            fontSize: "16px",
+            fontWeight: "bold",
+            transition: "background-color 0.3s, transform 0.2s",
+          }}
+          onMouseEnter={(e) => (e.target.style.backgroundColor = "#d3d3d3")}
+          onMouseLeave={(e) => (e.target.style.backgroundColor = "#f0f0f0")}
+          onMouseDown={(e) => (e.target.style.transform = "scale(0.95)")}
+          onMouseUp={(e) => (e.target.style.transform = "scale(1)")}
+        >
+          Print Table
+        </button>
+      </Container>
 
             <Container className="mt-8">
 
@@ -125,10 +151,9 @@ const SearchStudentCOR = () => {
                                     margin: "0 auto", // center the content
                                     fontFamily: "Times New Roman",
                                     boxSizing: "border-box",
-
                                     padding: "10px 0", // reduced horizontal padding
-
                                 }}>
+
                                     <div style={{
                                         display: "flex",
                                         alignItems: "center",
@@ -140,11 +165,15 @@ const SearchStudentCOR = () => {
                                             <img
                                                 src={EaristLogo}
                                                 alt="Earist Logo"
-                                                style={{ width: "120px", height: "120px", objectFit: "contain", marginLeft: "10px", marginTop: "-25px" }}
+                                                style={{
+                                                    width: "120px",
+                                                    height: "120px",
+                                                    objectFit: "contain",
+                                                    marginLeft: "10px",
+                                                    marginTop: "-25px"
+                                                }}
                                             />
                                         </div>
-
-
 
                                         <div style={{
                                             flexGrow: 1,
@@ -154,12 +183,45 @@ const SearchStudentCOR = () => {
                                             lineHeight: 1.4,
                                             paddingTop: 0,
                                             paddingBottom: 0,
-                                            
                                         }}>
-                                            <div style={{ marginLeft: "-145px", fontsize: "12px", fontFamily: "Arial", letterSpacing: '2px'  }}>Republic of the Philippines</div>
-                                            <div style={{ marginLeft: "-145px", fontsize: "12px", fontFamily: "Arial", letterSpacing: '2px'  }}><b>EULOGIO "AMANG" RODRIGUEZ </b></div>
-                                            <div style={{ marginLeft: "-145px", fontsize: "12px", fontFamily: "Arial", letterSpacing: '2px'  }}><b>INSTITUTE OF SCIENCE AND TECHNOLOGY</b></div>
-                                            <div style={{ marginLeft: "-145px", fontsize: "12px", fontFamily: "Arial", letterSpacing: '2px' }}><b>Nagtahan, Sampaloc, Manila 1008</b></div>
+                                            <div style={{
+                                                marginLeft: "-145px",
+                                                fontSize: "12px",
+                                                fontFamily: "Arial",
+                                                letterSpacing: '1px',
+                                                fontWeight: "normal"
+                                            }}>
+                                                Republic of the Philippines
+                                            </div>
+
+                                            <div style={{
+                                                marginLeft: "-145px",
+                                                fontSize: "12px",
+                                                fontFamily: "Arial",
+                                                letterSpacing: '2px'
+                                            }}>
+                                                <b>EULOGIO "AMANG" RODRIGUEZ</b>
+                                            </div>
+
+                                            <div style={{
+                                                marginLeft: "-145px",
+                                                fontSize: "12px",
+                                                fontFamily: "Arial",
+                                                letterSpacing: '2px'
+                                            }}>
+                                                <b>INSTITUTE OF SCIENCE AND TECHNOLOGY</b>
+                                            </div>
+
+                                            <div style={{
+                                                marginLeft: "-145px",
+                                                fontSize: "12px",
+                                                fontFamily: "Arial",
+                                                letterSpacing: '1px',
+                                                fontWeight: "normal"
+                                            }}>
+                                                Nagtahan, Sampaloc, Manila 1008
+                                            </div>
+
                                             <br />
 
                                             <div style={{
@@ -172,15 +234,13 @@ const SearchStudentCOR = () => {
                                                 textAlign: "center",
                                             }}>
                                                 ADMISSION SERVICES
-                                                <br/>
-                                                  HELP US SERVE YOU BETTER!
-                                               
+                                                <br />
+                                                HELP US SERVE YOU BETTER!
                                             </div>
-
-                                           
                                         </div>
                                     </div>
                                 </div>
+
                             </Container>
 
 
@@ -333,30 +393,22 @@ const SearchStudentCOR = () => {
                                     >
                                         <tbody>
                                             <tr>
-                                                <td colSpan="2" style={{ textAlign: "center" }}>
+                                                <td colSpan="2" style={{ textAlign: "left" }}>
                                                     <span style={{ fontWeight: "bold", fontSize: "12px", marginRight: "30px", }}>Others:</span>
-                                                    <span
-                                                        style={{
-                                                            display: "inline-block",
-                                                            borderBottom: "1px solid black",
-                                                            width: "50%",
-
-                                                            verticalAlign: "bottom"
-                                                        }}
-                                                    >
-
-                                                    </span>
 
                                                     <span
                                                         style={{
                                                             display: "inline-block",
+                                                            marginLeft: "5px",
                                                             borderBottom: "1px solid black",
                                                             width: "98%",
                                                             height: "20px",
                                                             verticalAlign: "bottom",
                                                             marginTop: "5px"
                                                         }}
-                                                    ></span>
+                                                    >
+
+                                                    </span>
                                                 </td>
                                             </tr>
                                         </tbody>
@@ -1364,10 +1416,9 @@ const SearchStudentCOR = () => {
                                     </tr>
                                     <tr>
                                         <td colSpan={40} style={{ textAlign: "left", fontFamily: "Times New Roman", fontSize: "12px", paddingTop: "5px" }}>
-                                            <span style={{ fontWeight: "bold", marginRight: "30px" }}>Suggestion on how we can further improve our services (optional):</span>{" "}
-                                            <br />
-                                            <br />
-                                            <span style={{ display: "inline-block", borderBottom: "1px solid black", width: "99%", paddingLeft: "10px" }}>
+                                            <span style={{ fontWeight: "bold", marginRight: "10px" }}>Suggestion on how we can further improve our services (optional):</span>{" "}
+
+                                            <span style={{ display: "inline-block", borderBottom: "1px solid black", width: "52%", paddingLeft: "10px" }}>
                                                 {/* Full name goes here */}
                                             </span>
                                         </td>
@@ -1376,7 +1427,7 @@ const SearchStudentCOR = () => {
 
                                     <tr>
                                         <td colSpan={40} style={{ textAlign: "left", fontFamily: "Times New Roman", fontSize: "12px", paddingTop: "5px" }}>
-                                            <span style={{ fontWeight: "bold", marginRight: "30px" }}>Email Address: (optional)</span>{" "}
+                                            <span style={{ fontWeight: "bold", marginRight: "10px" }}>Email Address: (optional)</span>{" "}
 
                                             <span style={{ display: "inline-block", borderBottom: "1px solid black", width: "50%", paddingLeft: "10px" }}>
                                                 {/* Full name goes here */}
@@ -1398,28 +1449,7 @@ const SearchStudentCOR = () => {
                 </div>
 
 
-                <button
-                    onClick={printDiv}
-                    style={{
-                        marginBottom: "1rem",
-                        padding: "10px 20px",
-                        border: "2px solid black",
-                        backgroundColor: "#f0f0f0",
-                        color: "black",
-                        borderRadius: "5px",
-                        marginTop: "20px",
-                        cursor: "pointer",
-                        fontSize: "16px",
-                        fontWeight: "bold",
-                        transition: "background-color 0.3s, transform 0.2s",
-                    }}
-                    onMouseEnter={(e) => (e.target.style.backgroundColor = "#d3d3d3")}
-                    onMouseLeave={(e) => (e.target.style.backgroundColor = "#f0f0f0")}
-                    onMouseDown={(e) => (e.target.style.transform = "scale(0.95)")}
-                    onMouseUp={(e) => (e.target.style.transform = "scale(1)")}
-                >
-                    Print Table
-                </button>
+
             </Container>
         </Box>
     );
