@@ -77,8 +77,8 @@ const SearchStudentCOR = () => {
 
               /* FIX ICON SIZE ON PRINT */
         svg.MuiSvgIcon-root {
-          width: 24px !important;
-          height: 24px !important;
+          width: 50px !important;
+          height: 50xpx !important;
         }
           </style>
         </head>
@@ -99,32 +99,32 @@ const SearchStudentCOR = () => {
 
     return (
         <Box sx={{ height: 'calc(100vh - 120px)', overflowY: 'auto', paddingRight: 1, backgroundColor: 'transparent' }}>
-      <Container>
-        <h1 style={{ fontSize: "40px", fontWeight: "bold", textAlign: "Left", color: "maroon", marginTop: "25px" }}> ADMISSION SERVICES</h1>
-        <hr style={{ border: "1px solid #ccc", width: "37%" }} />
-        <button
-          onClick={printDiv}
-          style={{
-            marginBottom: "1rem",
-            padding: "10px 20px",
-            border: "2px solid black",
-            backgroundColor: "#f0f0f0",
-            color: "black",
-            borderRadius: "5px",
-            marginTop: "20px",
-            cursor: "pointer",
-            fontSize: "16px",
-            fontWeight: "bold",
-            transition: "background-color 0.3s, transform 0.2s",
-          }}
-          onMouseEnter={(e) => (e.target.style.backgroundColor = "#d3d3d3")}
-          onMouseLeave={(e) => (e.target.style.backgroundColor = "#f0f0f0")}
-          onMouseDown={(e) => (e.target.style.transform = "scale(0.95)")}
-          onMouseUp={(e) => (e.target.style.transform = "scale(1)")}
-        >
-          Print Table
-        </button>
-      </Container>
+            <Container>
+                <h1 style={{ fontSize: "40px", fontWeight: "bold", textAlign: "Left", color: "maroon", marginTop: "25px" }}> ADMISSION SERVICES</h1>
+                <hr style={{ border: "1px solid #ccc", width: "37%" }} />
+                <button
+                    onClick={printDiv}
+                    style={{
+                        marginBottom: "1rem",
+                        padding: "10px 20px",
+                        border: "2px solid black",
+                        backgroundColor: "#f0f0f0",
+                        color: "black",
+                        borderRadius: "5px",
+                        marginTop: "20px",
+                        cursor: "pointer",
+                        fontSize: "16px",
+                        fontWeight: "bold",
+                        transition: "background-color 0.3s, transform 0.2s",
+                    }}
+                    onMouseEnter={(e) => (e.target.style.backgroundColor = "#d3d3d3")}
+                    onMouseLeave={(e) => (e.target.style.backgroundColor = "#f0f0f0")}
+                    onMouseDown={(e) => (e.target.style.transform = "scale(0.95)")}
+                    onMouseUp={(e) => (e.target.style.transform = "scale(1)")}
+                >
+                    Print Table
+                </button>
+            </Container>
 
             <Container className="mt-8">
 
@@ -140,7 +140,7 @@ const SearchStudentCOR = () => {
         `}
                         </style>
 
-
+                        <br />
 
                         <div className="section">
 
@@ -246,7 +246,7 @@ const SearchStudentCOR = () => {
 
                             <table
                                 style={{
-                                    border: "1px solid black",
+
                                     borderCollapse: "collapse",
                                     fontFamily: "Arial, Helvetica, sans-serif",
                                     width: "8in",
@@ -259,13 +259,13 @@ const SearchStudentCOR = () => {
 
                                     {/* Title: PERSONAL DATA FORM */}
                                     <tr>
-                                        <td colSpan="2" style={{ padding: "8px", textAlign: "justify", fontSize: "12px" }}>
+                                        <td colSpan="2" style={{ textAlign: "justify", fontSize: "11px" }}>
                                             This Client Satisfaction Measurement (CSM) tracks the customer experience of government offices.
                                             Your feedback on your recently concluded transaction will help this office provide a better service.
                                             Personal information shared will be kept confidential and you always have the option to not answer this form.
                                         </td>
                                     </tr>
-
+                                    <br />
 
                                     <table
                                         style={{
@@ -275,6 +275,7 @@ const SearchStudentCOR = () => {
                                             margin: "0 auto",
                                             textAlign: "left",
                                             tableLayout: "fixed",
+                                            fontSize: "12px",
                                         }}
                                     >
                                         <tbody>
@@ -294,7 +295,7 @@ const SearchStudentCOR = () => {
                                             </tr>
                                         </tbody>
                                     </table>
-
+                                    <br />
                                     <table
                                         style={{
                                             borderCollapse: "collapse",
@@ -308,7 +309,7 @@ const SearchStudentCOR = () => {
                                     >
                                         <tbody>
                                             <tr>
-                                                <td colSpan="2" style={{ padding: "4px 8px" }}>
+                                                <td colSpan="2">
                                                     <label style={{ marginRight: "10px" }}>Date:</label>
                                                     <input
                                                         type="text"
@@ -351,14 +352,14 @@ const SearchStudentCOR = () => {
                                                             border: "none",
                                                             borderBottom: "1px solid black",
                                                             outline: "none",
-                                                            width: "140px"
+                                                            width: "157px"
                                                         }}
                                                     />
                                                 </td>
                                             </tr>
                                         </tbody>
                                     </table>
-
+                                    <br />
                                     <table
                                         style={{
                                             borderCollapse: "collapse",
@@ -393,15 +394,29 @@ const SearchStudentCOR = () => {
                                     >
                                         <tbody>
                                             <tr>
-                                                <td colSpan="2" style={{ textAlign: "left" }}>
-                                                    <span style={{ fontWeight: "bold", fontSize: "12px", marginRight: "30px", }}>Others:</span>
+                                                <td colSpan="2" style={{ textAlign: "center" }}>
+
+                                                    <span style={{ fontWeight: "bold", fontSize: "12px", marginRight: "10px", }}>Others:</span>
+                                                    <span
+                                                        style={{
+                                                            display: "inline-block",
+
+                                                            borderBottom: "1px solid black",
+                                                            width: "40%",
+                                                            height: "20px",
+                                                            verticalAlign: "bottom",
+                                                            marginTop: "5px"
+                                                        }}
+                                                    >
+
+                                                    </span>
 
                                                     <span
                                                         style={{
                                                             display: "inline-block",
                                                             marginLeft: "5px",
                                                             borderBottom: "1px solid black",
-                                                            width: "98%",
+                                                            width: "100%",
                                                             height: "20px",
                                                             verticalAlign: "bottom",
                                                             marginTop: "5px"
@@ -415,7 +430,7 @@ const SearchStudentCOR = () => {
                                     </table>
 
 
-
+                                    <br />
 
                                     <table
                                         style={{
@@ -430,14 +445,14 @@ const SearchStudentCOR = () => {
                                         <tbody>
                                             {/* INSTRUCTIONS */}
                                             <tr>
-                                                <td colSpan={2} style={{ padding: '10px', textAlign: 'justify', fontSize: '12px' }}>
+                                                <td colSpan={2} style={{ textAlign: 'justify', fontSize: '12px' }}>
                                                     <strong>INSTRUCTIONS:</strong> Check mark (✓) your answer to the Citizen's Charter (CC) questions. The Citizen's Charter is an official document that reflects the service of a government agency/office including its requirements, fees, and processing times among others.
                                                 </td>
                                             </tr>
 
                                             {/* CC1 QUESTION */}
                                             <tr>
-                                                <td colSpan={2} style={{ padding: '8px 10px', fontWeight: 'bold', fontSize: '12px', textAlign: 'justify' }}>
+                                                <td colSpan={2} style={{ marginTop: "10px", fontWeight: 'bold', fontSize: '12px', textAlign: 'justify' }}>
                                                     CC1 - Which of the following best describes your awareness of a CC?
                                                 </td>
                                             </tr>
@@ -450,7 +465,7 @@ const SearchStudentCOR = () => {
                                                 "4. I do not know what a CC is and I did not see one in this office. (Answer 'N/A' on CC2 and CC3)"
                                             ].map((text, index) => (
                                                 <tr key={`cc1-${index}`}>
-                                                    <td colSpan={2} style={{ padding: '4px 10px' }}>
+                                                    <td colSpan={2}>
                                                         <label style={{ display: 'flex', alignItems: 'center', marginLeft: "20px", fontSize: "12px" }}>
                                                             <input type="checkbox" name="cc1" style={{ marginRight: '8px' }} />
                                                             {text}
@@ -461,7 +476,7 @@ const SearchStudentCOR = () => {
 
                                             {/* CC2 QUESTION */}
                                             <tr>
-                                                <td colSpan={2} style={{ padding: '8px 10px', fontWeight: 'bold', fontSize: '12px', textAlign: 'justify' }}>
+                                                <td colSpan={2} style={{ fontWeight: 'bold', fontSize: '12px', textAlign: 'justify' }}>
                                                     CC2 - If aware of CC (answered 1-3 in CC1), would you say that the CC of this office was...?
                                                 </td>
                                             </tr>
@@ -474,7 +489,7 @@ const SearchStudentCOR = () => {
                                             ].map((row, i) => (
                                                 <tr key={`cc2-${i}`}>
                                                     {row.map((text, j) => (
-                                                        <td key={j} style={{ padding: '4px 10px', width: '50%' }}>
+                                                        <td key={j} style={{ width: '50%' }}>
                                                             {text && (
                                                                 <label style={{ display: 'flex', alignItems: 'center', marginLeft: "20px", fontSize: "12px" }}>
                                                                     <input type="checkbox" name="cc2" style={{ marginRight: '8px' }} />
@@ -488,7 +503,7 @@ const SearchStudentCOR = () => {
 
                                             {/* CC3 QUESTION */}
                                             <tr>
-                                                <td colSpan={2} style={{ padding: '8px 10px', fontWeight: 'bold', fontSize: '12px', textAlign: 'justify' }}>
+                                                <td colSpan={2} style={{ fontWeight: 'bold', fontSize: '12px', textAlign: 'justify' }}>
                                                     CC3 - If aware of CC (answered codes 1-3 in CC1), how much did the CC help you in your transaction?
                                                 </td>
                                             </tr>
@@ -500,7 +515,7 @@ const SearchStudentCOR = () => {
                                             ].map((row, i) => (
                                                 <tr key={`cc3-${i}`}>
                                                     {row.map((text, j) => (
-                                                        <td key={j} style={{ padding: '4px 10px', width: '50%' }}>
+                                                        <td key={j} style={{ width: '50%' }}>
                                                             <label style={{ display: 'flex', alignItems: 'center', marginLeft: "20px", fontSize: "12px" }}>
                                                                 <input type="checkbox" name="cc3" style={{ marginRight: '8px' }} />
                                                                 {text}
@@ -518,7 +533,7 @@ const SearchStudentCOR = () => {
 
                                         </tbody>
                                     </table>
-
+                                    <br />
 
 
 
@@ -537,7 +552,7 @@ const SearchStudentCOR = () => {
                             >
                                 <tbody>
                                     <tr>
-                                        <td colSpan="40" style={{ textAlign: 'justify', padding: '12px', fontSize: '12px' }}>
+                                        <td colSpan="40" style={{ textAlign: 'justify', fontSize: '12px' }}>
                                             <strong>INSTRUCTIONS:</strong> <span> For SQD 0–8, please put a check mark ( ✓ ) on the column that best corresponds to your answer.</span>
                                         </td>
                                     </tr>
@@ -683,7 +698,8 @@ const SearchStudentCOR = () => {
                                             }}
                                         >
                                             <div style={{ display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center" }}>
-                                                <div style={{ fontSize: "20px" }}>N/A</div>
+                                                <div style={{ fontSize: "30px", fontWeight: "bold" }}>N/A</div>
+                                                <br />
                                                 <span>Not Applicable</span>
 
 
@@ -701,7 +717,7 @@ const SearchStudentCOR = () => {
                                                 border: "1px solid black",
                                                 textAlign: "left",
                                                 padding: "8px",
-                                                fontWeight: "bold",
+
                                                 fontSize: "12px",
                                                 fontFamily: "Arial, sans-serif",
                                             }}
@@ -782,8 +798,8 @@ const SearchStudentCOR = () => {
                                                 border: "1px solid black",
                                                 textAlign: "left",
                                                 padding: "8px",
-                                                fontWeight: "bold",
-                                                fontSize: "12px",
+
+                                                fontSize: "11px",
                                                 fontFamily: "Arial, sans-serif",
                                             }}
                                         >
@@ -862,11 +878,11 @@ const SearchStudentCOR = () => {
                                                 border: "1px solid black",
                                                 textAlign: "left",
                                                 padding: "8px",
-                                                fontWeight: "bold",
-                                                fontSize: "12px",
+
+                                                fontSize: "11px",
                                             }}
                                         >
-                                            SQD2. The office followed the transaction's requirements and steps based on the information provided
+                                            SQD2. The office followed the transaction's requirements and steps based on the information provided.
 
                                         </td>
                                         <td
@@ -941,12 +957,12 @@ const SearchStudentCOR = () => {
                                                 border: "1px solid black",
                                                 textAlign: "left",
                                                 padding: "8px",
-                                                fontWeight: "bold",
-                                                fontSize: "12px",
+
+                                                fontSize: "11px",
                                                 fontFamily: "Arial, sans-serif",
                                             }}
                                         >
-                                            SQD3. The steps (including payment) I needed to do for my transaction were easy and simple
+                                            SQD3. The steps (including payment) I needed to do for my transaction were easy and simple.
 
                                         </td>
                                         <td
@@ -1021,9 +1037,9 @@ const SearchStudentCOR = () => {
                                                 border: "1px solid black",
                                                 textAlign: "left",
                                                 padding: "8px",
-                                                fontWeight: "bold",
+
                                                 fontFamily: "Arial, sans-serif",
-                                                fontSize: "12px",
+                                                fontSize: "11px",
                                             }}
                                         >
                                             SQD4. I easily found information about my transaction from the office or its website.
@@ -1101,8 +1117,8 @@ const SearchStudentCOR = () => {
                                                 border: "1px solid black",
                                                 textAlign: "left",
                                                 padding: "8px",
-                                                fontWeight: "bold",
-                                                fontSize: "12px",
+
+                                                fontSize: "11px",
                                                 fontFamily: "Arial, sans-serif",
                                             }}
                                         >
@@ -1181,8 +1197,8 @@ const SearchStudentCOR = () => {
                                                 border: "1px solid black",
                                                 textAlign: "left",
                                                 padding: "8px",
-                                                fontWeight: "bold",
-                                                fontSize: "12px",
+
+                                                fontSize: "11px",
                                                 fontFamily: "Arial, sans-serif",
                                             }}
                                         >
@@ -1261,12 +1277,12 @@ const SearchStudentCOR = () => {
                                                 border: "1px solid black",
                                                 textAlign: "left",
                                                 padding: "8px",
-                                                fontWeight: "bold",
-                                                fontSize: "12px",
+
+                                                fontSize: "11px",
                                                 fontFamily: "Arial, sans-serif",
                                             }}
                                         >
-                                            SQD7. I was treated courteously by the staff, and (if asked for help) the staff was helpful
+                                            SQD7. I was treated courteously by the staff, and (if asked for help) the staff was helpful.
 
                                         </td>
                                         <td
@@ -1341,8 +1357,8 @@ const SearchStudentCOR = () => {
                                                 border: "1px solid black",
                                                 textAlign: "left",
                                                 padding: "8px",
-                                                fontWeight: "bold",
-                                                fontSize: "12px",
+
+                                                fontSize: "11px",
                                                 fontFamily: "Arial, sans-serif",
                                             }}
                                         >
@@ -1407,18 +1423,20 @@ const SearchStudentCOR = () => {
                                             colSpan={4}
                                             style={{
                                                 border: "1px solid black",
-                                                padding: "8px",
+                                                padding: "12px",
                                                 textAlign: "Center",
                                             }}
                                         >
 
                                         </td>
                                     </tr>
+
                                     <tr>
                                         <td colSpan={40} style={{ textAlign: "left", fontFamily: "Times New Roman", fontSize: "12px", paddingTop: "5px" }}>
-                                            <span style={{ fontWeight: "bold", marginRight: "10px" }}>Suggestion on how we can further improve our services (optional):</span>{" "}
+                                            <span style={{ fontWeight: "bold", marginRight: "10px", paddingBottom: "20px" }}>Suggestion on how we can further improve our services (optional):</span>{" "}
 
-                                            <span style={{ display: "inline-block", borderBottom: "1px solid black", width: "52%", paddingLeft: "10px" }}>
+                                            <br />
+                                            <span style={{ marginTop: "20px", display: "inline-block", borderBottom: "1px solid black", width: "100%", paddingLeft: "10px" }}>
                                                 {/* Full name goes here */}
                                             </span>
                                         </td>
@@ -1429,7 +1447,7 @@ const SearchStudentCOR = () => {
                                         <td colSpan={40} style={{ textAlign: "left", fontFamily: "Times New Roman", fontSize: "12px", paddingTop: "5px" }}>
                                             <span style={{ fontWeight: "bold", marginRight: "10px" }}>Email Address: (optional)</span>{" "}
 
-                                            <span style={{ display: "inline-block", borderBottom: "1px solid black", width: "50%", paddingLeft: "10px" }}>
+                                            <span style={{ marginTop: "15px", display: "inline-block", borderBottom: "1px solid black", width: "50%", paddingLeft: "10px" }}>
                                                 {/* Full name goes here */}
                                             </span>
                                         </td>
@@ -1438,8 +1456,8 @@ const SearchStudentCOR = () => {
                                 </tbody>
                             </table>
 
-
-
+                            <br />
+                            <div style={{ fontSize: "20px", fontFamily: "Arial", textAlign: "Center" }}>THANK YOU!</div>
 
 
 
