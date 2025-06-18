@@ -1,5 +1,27 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
+import {
+  Box,
+  Button,
+  Container,
+  Typography,
+  FormControl,
+  InputLabel,
+  Select,
+  MenuItem,
+  TextField,
+  Paper,
+  CircularProgress,
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TableRow,
+  IconButton
+} from '@mui/material';
+import DeleteIcon from '@mui/icons-material/Delete';
+import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 
 function RequirementUploader() {
   const [requirements, setRequirements] = useState([]);
@@ -59,7 +81,7 @@ function RequirementUploader() {
   const handleDelete = async (id) => {
     if (window.confirm('Are you sure you want to delete this upload?')) {
       try {
-        await axios.delete(`http://localhost:5000/upload/${id}`);
+        await axios.delete(`http://localhost:5000/uploads/${id}`);
         fetchUploads();
       } catch (err) {
         console.error('Delete failed:', err);
@@ -69,193 +91,138 @@ function RequirementUploader() {
   };
 
   return (
-    <div style={containerStyle}>
-      <h2 style={headerStyle}>Upload Requirement Document</h2>
-
-      <div style={formCardStyle}>
-        <div style={formGroup}>
-          <label style={labelStyle}>Requirement</label>
-          <select
-            onChange={(e) => setSelectedRequirement(e.target.value)}
-            value={selectedRequirement}
-            style={selectStyle}
-          >
-            <option value="">-- Select Requirement --</option>
-            {requirements.map((req) => (
-              <option key={req.id} value={req.id}>
-                {req.description}
-              </option>
-            ))}
-          </select>
-        </div>
-
-        <div style={formGroup}>
-          <label style={labelStyle}>Upload File</label>
-          <input
-            type="file"
-            onChange={(e) => setFile(e.target.files[0])}
-            style={inputStyle}
-            accept=".png,.jpg,.jpeg,.pdf"
-          />
-        </div>
-
-        <button
-          onClick={handleUpload}
-          disabled={loading}
-          style={uploadButtonStyle(loading)}
+    <Box sx={{ height: "calc(100vh - 150px)", overflowY: "auto", paddingRight: 1, backgroundColor: "transparent" }}>
+      <Container maxWidth="md" sx={{ mt: 5, }}>
+        <Container>
+          <h1 style={{ fontSize: "40px", fontWeight: "bold", textAlign: "center", color: "maroon", marginTop: "25px" }}>UPLOAD REQUIREMENT DOCUMENT</h1>
+          <div style={{ textAlign: "center" }}>Complete the applicant form to secure your place for the upcoming academic year at EARIST.</div>
+        </Container>
+        <br />
+        <Container
+          maxWidth="100%"
+          sx={{
+            backgroundColor: "#6D2323",
+            border: "2px solid black",
+            maxHeight: "500px",
+            overflowY: "auto",
+            color: "white",
+            borderRadius: 2,
+            boxShadow: 3,
+            padding: "4px",
+          }}
         >
-          {loading ? 'Uploading...' : 'Upload'}
-        </button>
-      </div>
+          <Box sx={{ width: "100%" }}>
+            <Typography style={{ fontSize: "20px", padding: "10px", fontFamily: "Arial Black" }}>Step 6: Upload Documents</Typography>
+          </Box>
+        </Container>
+        <Paper elevation={3} sx={{ p: 4, borderRadius: 3, border: "1px solid black" }}>
+          <Typography style={{ fontSize: "20px", color: "#6D2323", fontWeight: "bold" }}>Select Documents:</Typography>
+          <hr style={{ border: "1px solid #ccc", width: "100%" }} />
 
-      <h3 style={{ marginTop: '40px', textAlign: 'center' }}>Uploaded Documents</h3>
+          <Box display="flex" flexDirection="column" gap={3} mt={2}>
+            {/* Select Requirement (default size) */}
+            <label style={{ marginTop: "-5px", marginBottom: "-20px" }} className="w-40 font-medium">Requirement:</label>
+            <FormControl fullWidth>
+              <InputLabel id="requirement-label">Select Requirement</InputLabel>
+              <Select
+                labelId="requirement-label"
+                value={selectedRequirement}
+                onChange={(e) => setSelectedRequirement(e.target.value)}
+                label="Select Requirement"
+              >
+                <MenuItem value="">
+                  <em>-- Select Requirement --</em>
+                </MenuItem>
+                {requirements.map((req) => (
+                  <MenuItem key={req.id} value={req.id}>
+                    {req.description}
+                  </MenuItem>
+                ))}
+              </Select>
+            </FormControl>
+            <label style={{ marginTop: "-5px", marginBottom: "-20px" }} className="w-40 font-medium">Upload File:</label>
+            {/* File Upload (TextField with default size) */}
+            <TextField
+              type="file"
+              onChange={(e) => setFile(e.target.files[0])}
+              inputProps={{ accept: '.png,.jpg,.jpeg,.pdf' }}
+              fullWidth
+            />
 
-      <table style={tableStyle}>
-        <thead>
-          <tr style={{ backgroundColor: '#f1f1f1' }}>
-            <th style={thStyle}>ID</th>
-            <th style={thStyle}>Requirement</th>
-            <th style={thStyle}>File</th>
-            <th style={thStyle}>Date Uploaded</th>
-            <th style={thStyle}>Action</th>
-          </tr>
-        </thead>
-        <tbody>
-          {uploads.length === 0 ? (
-            <tr>
-              <td colSpan="5" style={emptyCellStyle}>No uploads found.</td>
-            </tr>
-          ) : (
-            uploads.map((upload, index) => (
-              <tr key={upload.upload_id} style={index % 2 ? rowAltStyle : null}>
-                <td style={tdStyle}>{upload.upload_id}</td>
-                <td style={tdStyle}>{upload.description}</td>
-                <td style={tdStyle}>
-                  <a
-                    href={`http://localhost:5000${upload.file_path}`}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    style={linkStyle}
-                  >
-                    View
-                  </a>
-                </td>
-                <td style={tdStyle}>
-                  {upload.created_at ? new Date(upload.created_at).toLocaleString() : 'N/A'}
-                </td>
-                <td style={tdStyle}>
-                  <button
-                    onClick={() => handleDelete(upload.upload_id)}
-                    style={deleteButtonStyle}
-                  >
-                    Delete
-                  </button>
-                </td>
-              </tr>
-            ))
-          )}
-        </tbody>
-      </table>
-    </div>
+
+            <Button
+              onClick={handleUpload}
+              variant="contained"
+              startIcon={loading ? <CircularProgress size={20} color="inherit" /> : <CloudUploadIcon />}
+              disabled={loading}
+              sx={{
+                backgroundColor: '#6D2323',
+                '&:hover': { backgroundColor: '#5a1f1f' },
+                color: 'white',
+                fontWeight: 'bold',
+                textTransform: 'none',
+                py: 1
+              }}
+            >
+              {loading ? 'Uploading...' : 'Upload'}
+            </Button>
+          </Box>
+        </Paper>
+
+        <Typography variant="h6" align="center" mt={5} mb={2} color="#6D2323">
+          Uploaded Documents
+        </Typography>
+
+        <TableContainer component={Paper} sx={{ borderRadius: 3 }}>
+          <Table>
+            <TableHead sx={{ backgroundColor: '#f1f1f1' }}>
+              <TableRow>
+                <TableCell>ID</TableCell>
+                <TableCell>Requirement</TableCell>
+                <TableCell>File</TableCell>
+                <TableCell>Date Uploaded</TableCell>
+                <TableCell>Action</TableCell>
+              </TableRow>
+            </TableHead>
+            <TableBody>
+              {uploads.length === 0 ? (
+                <TableRow>
+                  <TableCell colSpan={5} align="center" sx={{ color: '#888', fontStyle: 'italic' }}>
+                    No uploads found.
+                  </TableCell>
+                </TableRow>
+              ) : (
+                uploads.map((upload) => (
+                  <TableRow key={upload.upload_id}>
+                    <TableCell>{upload.upload_id}</TableCell>
+                    <TableCell>{upload.description}</TableCell>
+                    <TableCell>
+                      <a
+                        href={`http://localhost:5000${upload.file_path}`}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        style={{ color: '#007bff', textDecoration: 'none' }}
+                      >
+                        View
+                      </a>
+                    </TableCell>
+                    <TableCell>
+                      {upload.created_at ? new Date(upload.created_at).toLocaleString() : 'N/A'}
+                    </TableCell>
+                    <TableCell>
+                      <IconButton color="error" onClick={() => handleDelete(upload.upload_id)}>
+                        <DeleteIcon sx={{ color: 'maroon' }} />
+                      </IconButton>
+                    </TableCell>
+                  </TableRow>
+                ))
+              )}
+            </TableBody>
+          </Table>
+        </TableContainer>
+      </Container>
+    </Box>
   );
 }
-
-// 🔧 Styles
-const containerStyle = {
-  maxWidth: '800px',
-  margin: '50px auto',
-  fontFamily: 'Segoe UI, sans-serif',
-  padding: '20px',
-};
-
-const headerStyle = {
-  textAlign: 'center',
-  marginBottom: '30px',
-  color: '#333',
-};
-
-const formCardStyle = {
-  backgroundColor: '#fff',
-  padding: '20px',
-  borderRadius: '8px',
-  boxShadow: '0 2px 8px rgba(0,0,0,0.1)',
-  display: 'flex',
-  flexDirection: 'column',
-  gap: '15px',
-};
-
-const formGroup = {
-  display: 'flex',
-  flexDirection: 'column',
-};
-
-const labelStyle = {
-  marginBottom: '5px',
-  fontWeight: 'bold',
-};
-
-const selectStyle = {
-  padding: '10px',
-  borderRadius: '4px',
-  border: '1px solid #ccc',
-};
-
-const inputStyle = {
-  padding: '8px',
-  borderRadius: '4px',
-  border: '1px solid #ccc',
-};
-
-const uploadButtonStyle = (loading) => ({
-  padding: '10px 15px',
-  backgroundColor: loading ? '#6c757d' : '#007bff',
-  color: '#fff',
-  border: 'none',
-  borderRadius: '4px',
-  cursor: loading ? 'not-allowed' : 'pointer',
-  transition: 'background-color 0.2s',
-});
-
-const tableStyle = {
-  width: '100%',
-  borderCollapse: 'collapse',
-  marginTop: '20px',
-};
-
-const thStyle = {
-  padding: '12px',
-  borderBottom: '2px solid #ccc',
-  textAlign: 'left',
-};
-
-const tdStyle = {
-  padding: '10px',
-  borderBottom: '1px solid #e0e0e0',
-};
-
-const rowAltStyle = {
-  backgroundColor: '#f9f9f9',
-};
-
-const emptyCellStyle = {
-  textAlign: 'center',
-  padding: '20px',
-  fontStyle: 'italic',
-  color: '#888',
-};
-
-const linkStyle = {
-  color: '#007bff',
-  textDecoration: 'none',
-};
-
-const deleteButtonStyle = {
-  padding: '6px 12px',
-  backgroundColor: '#dc3545',
-  color: '#fff',
-  border: 'none',
-  borderRadius: '4px',
-  cursor: 'pointer',
-};
 
 export default RequirementUploader;
